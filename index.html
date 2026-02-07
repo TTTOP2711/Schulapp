@@ -389,158 +389,162 @@
     </div>
 
     <script>
-        // Vocabulary Database
+        // Vocabulary Database - Extended with context and multiple accepted answers
         const vocabulary = {
             A: [
-                {en: "novel", de: "Roman"},
-                {en: "I reckon", de: "Ich schätze"},
-                {en: "promise", de: "Versprechen"},
-                {en: "salty", de: "salzig"},
-                {en: "treat", de: "behandeln"},
-                {en: "haircut", de: "Haarschnitt"},
-                {en: "vote", de: "stimmen"},
-                {en: "elections", de: "Wahlen"},
-                {en: "subject", de: "Thema"},
-                {en: "politics", de: "Politik"},
-                {en: "sensitive", de: "empfindlich"},
-                {en: "issue", de: "Thema"},
-                {en: "once", de: "einmal"},
-                {en: "photographer", de: "Fotograf"},
-                {en: "setting", de: "Schauplatz"},
-                {en: "series", de: "Serie"}
+                {en: ["novel"], de: ["Roman"], hint: ""},
+                {en: ["I reckon"], de: ["ich schätze", "ich denke", "ich nehme an"], hint: "= I guess ..., I think ..."},
+                {en: ["(to) promise"], de: ["versprechen"], hint: ""},
+                {en: ["salty"], de: ["salzig"], hint: ""},
+                {en: ["(to) treat"], de: ["behandeln"], hint: "We should treat other people with respect."},
+                {en: ["haircut"], de: ["haarschnitt"], hint: "Go and get a haircut."},
+                {en: ["(to) vote", "(to) vote for sb./sth."], de: ["stimmen", "wählen", "zur wahl gehen"], hint: "Who are you going to vote for as band of the year?"},
+                {en: ["elections"], de: ["wahlen"], hint: "Elections for President of the United States are held every four years."},
+                {en: ["subject"], de: ["thema", "subjekt", "schulfach"], hint: "1. Subjekt; 2. Schulfach; 3. Thema"},
+                {en: ["politics"], de: ["politik"], hint: "Politics is interesting for some people, and it is boring for others."},
+                {en: ["sensitive"], de: ["empfindlich", "sensibel", "heikel", "einfühlsam", "empfindsam"], hint: "Don't say anything about his big nose: he's very sensitive about it."},
+                {en: ["issue"], de: ["thema", "streitfrage", "angelegenheit"], hint: "Pocket money is a sensitive issue in some families."},
+                {en: ["once"], de: ["einmal", "sobald", "sowie", "wenn"], hint: "1. (adv) einmal; 2. (conj) Once you're finished, we can go."},
+                {en: ["photographer"], de: ["fotograf", "fotografin"], hint: ""},
+                {en: ["setting"], de: ["schauplatz"], hint: "The setting of the film is a small village in Cornwall."},
+                {en: ["series"], de: ["reihe", "serie"], hint: "It's my favourite series - I watch it every week."}
             ],
             B: [
-                {en: "waste", de: "Verschwendung"},
-                {en: "tree trunk", de: "Baumstamm"},
-                {en: "chin", de: "Kinn"},
-                {en: "tear", de: "reißen"},
-                {en: "key", de: "Taste"},
-                {en: "shake", de: "schütteln"},
-                {en: "first aid", de: "Erste Hilfe"},
-                {en: "breathe", de: "atmen"},
-                {en: "skin", de: "Haut"},
-                {en: "cheek", de: "Wange"},
-                {en: "pulse", de: "Puls"},
-                {en: "brain", de: "Gehirn"},
-                {en: "oxygen", de: "Sauerstoff"},
-                {en: "distant", de: "entfernt"},
-                {en: "sink", de: "sinken"},
-                {en: "intelligent", de: "intelligent"},
-                {en: "occasionally", de: "gelegentlich"},
-                {en: "dreamy", de: "verträumt"},
-                {en: "immigrant", de: "Einwanderer"},
-                {en: "university", de: "Universität"},
-                {en: "soap", de: "Seife"},
-                {en: "deodorant", de: "Deodorant"},
-                {en: "toothbrush", de: "Zahnbürste"},
-                {en: "toothpaste", de: "Zahnpasta"},
-                {en: "fridge", de: "Kühlschrank"},
-                {en: "can", de: "Dose"},
-                {en: "pretty", de: "ziemlich"},
-                {en: "anyway", de: "trotzdem"},
-                {en: "familiar", de: "vertraut"},
-                {en: "awkward", de: "peinlich"},
-                {en: "next door", de: "nebenan"},
-                {en: "muscle", de: "Muskel"},
-                {en: "hand", de: "Uhrzeiger"},
-                {en: "mean to do", de: "die Absicht haben"},
-                {en: "because of", de: "wegen"},
-                {en: "serious", de: "ernst"}
+                {en: ["waste"], de: ["verschwendung"], hint: "The meal at that restaurant was awful - a waste of time and money."},
+                {en: ["(to) waste sth. (on sth.)"], de: ["etwas verschwenden"], hint: "Water is limited. Don't waste it."},
+                {en: ["tree trunk", "trunk"], de: ["baumstamm"], hint: ""},
+                {en: ["chin"], de: ["kinn"], hint: ""},
+                {en: ["(to) tear", "tore", "torn"], de: ["reißen", "zerreißen"], hint: "My jeans tore as I climbed over the fence. I was so angry that I tore the letter into pieces."},
+                {en: ["key"], de: ["taste"], hint: ""},
+                {en: ["(to) shake", "shook", "shaken"], de: ["schütteln", "zittern"], hint: "1. schütteln; 2. zittern - Look, he's nervous: his hands are shaking."},
+                {en: ["first aid"], de: ["erste hilfe"], hint: ""},
+                {en: ["(to) breathe"], de: ["atmen"], hint: ""},
+                {en: ["skin"], de: ["haut"], hint: "I need some face cream. My skin is very dry."},
+                {en: ["cheek"], de: ["wange"], hint: ""},
+                {en: ["pulse"], de: ["puls", "pulsschlag"], hint: "The doctor took his pulse and blood pressure."},
+                {en: ["brain"], de: ["gehirn"], hint: ""},
+                {en: ["oxygen"], de: ["sauerstoff"], hint: ""},
+                {en: ["distant"], de: ["weit entfernt", "fern"], hint: "It will take you a long time to get to such a distant place."},
+                {en: ["(to) sink", "sank", "sunk"], de: ["sinken"], hint: ""},
+                {en: ["intelligent"], de: ["intelligent"], hint: ""},
+                {en: ["occasionally"], de: ["gelegentlich", "ab und zu"], hint: "We used to see each other a lot but we only meet occasionally now."},
+                {en: ["dreamy"], de: ["verträumt"], hint: ""},
+                {en: ["immigrant"], de: ["einwanderer", "einwanderin"], hint: ""},
+                {en: ["university"], de: ["universität"], hint: ""},
+                {en: ["soap"], de: ["seife"], hint: ""},
+                {en: ["deodorant"], de: ["deodorant"], hint: ""},
+                {en: ["toothbrush"], de: ["zahnbürste"], hint: ""},
+                {en: ["toothpaste"], de: ["zahnpasta"], hint: ""},
+                {en: ["fridge"], de: ["kühlschrank"], hint: ""},
+                {en: ["can"], de: ["dose"], hint: "In BE, the word can is always used for drinks. To talk about food, the British usually use tin."},
+                {en: ["pretty"], de: ["ziemlich", "hübsch"], hint: "1. (adj) hübsch; 2. (adv) ziemlich - Your new glasses look pretty cool."},
+                {en: ["anyway"], de: ["trotzdem", "jedenfalls", "sowieso"], hint: "Multiple meanings: 1. Jedenfalls; 2. Und überhaupt; 3. sowieso; 4. trotzdem"},
+                {en: ["familiar"], de: ["vertraut"], hint: "New York's skyline is familiar to people all over the world."},
+                {en: ["awkward"], de: ["peinlich", "unangenehm", "schwierig"], hint: "We felt rather awkward when Jake found out we hadn't invited him to the party."},
+                {en: ["next door"], de: ["nebenan"], hint: "I couldn't sleep. The TV was on all night in the room next door."},
+                {en: ["muscle"], de: ["muskel"], hint: ""},
+                {en: ["hand"], de: ["uhrzeiger"], hint: ""},
+                {en: ["(to) mean to do sth."], de: ["etwas tun wollen", "die absicht haben etwas zu tun"], hint: "Sorry, I meant to phone you, but I forgot."},
+                {en: ["because of"], de: ["wegen"], hint: "I stayed at home because it rained. / I stayed at home because of the rain."},
+                {en: ["serious"], de: ["ernst", "ernsthaft"], hint: "a serious illness/problem"}
             ],
             C: [
-                {en: "request", de: "Bitte"},
-                {en: "informal", de: "informell"},
-                {en: "be attracted to", de: "sich zu jm. hingezogen fühlen"},
-                {en: "be seeing", de: "mit jm. zusammen sein"},
-                {en: "fall in love", de: "sich verlieben"},
-                {en: "date", de: "mit jm. gehen"},
-                {en: "break up", de: "Schluss machen"},
-                {en: "get to know", de: "kennenlernen"},
-                {en: "annoyed", de: "verärgert"},
-                {en: "confused", de: "verwirrt"},
-                {en: "cross", de: "böse"},
-                {en: "frightened", de: "verängstigt"},
-                {en: "hopeful", de: "zuversichtlich"},
-                {en: "pessimistic", de: "pessimistisch"},
-                {en: "pleased", de: "erfreut"},
-                {en: "furious", de: "wütend"},
-                {en: "heartbroken", de: "todunglücklich"},
-                {en: "terrified", de: "entsetzt"},
-                {en: "thrilled", de: "begeistert"},
-                {en: "absolutely", de: "völlig"},
-                {en: "ex", de: "Ex"},
-                {en: "male", de: "männlich"},
-                {en: "female", de: "weiblich"},
-                {en: "acquaintance", de: "Bekannte(r)"},
-                {en: "enter", de: "etwas eingeben"},
-                {en: "password", de: "Passwort"},
-                {en: "update", de: "aktualisieren"},
-                {en: "status", de: "Status"},
-                {en: "account", de: "Account"},
-                {en: "murder", de: "Mord"},
-                {en: "declare", de: "erklären"},
-                {en: "husband", de: "Ehemann"},
-                {en: "wife", de: "Ehefrau"},
-                {en: "ought to", de: "du solltest aufhören"},
-                {en: "diet", de: "Ernährung"},
-                {en: "protein", de: "Protein"},
-                {en: "healthy", de: "gesund"},
-                {en: "be supposed to", de: "etwas tun sollen"},
-                {en: "pasta", de: "Nudeln"},
-                {en: "cultural", de: "kulturell"},
-                {en: "communication", de: "Kommunikation"},
-                {en: "statistics", de: "Statistik"},
-                {en: "bar chart", de: "Balkendiagramm"},
-                {en: "pie chart", de: "Tortendiagramm"},
-                {en: "chart", de: "Tabelle"},
-                {en: "average", de: "durchschnittlich"},
-                {en: "length", de: "Länge"},
-                {en: "useful", de: "nützlich"},
-                {en: "percentage", de: "Prozentsatz"},
-                {en: "chore", de: "Pflicht"},
-                {en: "realize", de: "etwas erkennen"},
-                {en: "amount", de: "Betrag"},
-                {en: "insist", de: "auf etwas bestehen"},
-                {en: "value", de: "Wert"},
-                {en: "tidy", de: "ordentlich"},
-                {en: "cash", de: "Bargeld"},
-                {en: "simply", de: "einfach"},
-                {en: "run out of", de: "zu Ende gehen"},
-                {en: "encourage", de: "ermutigen"},
-                {en: "perhaps", de: "vielleicht"},
-                {en: "certain", de: "bestimmt"},
-                {en: "habit", de: "Gewohnheit"},
-                {en: "agreement", de: "Einigung"},
-                {en: "express", de: "ausdrücken"},
-                {en: "stress", de: "betonen"},
-                {en: "agree to differ", de: "sich darauf einigen dass man verschiedener Ansicht ist"},
-                {en: "remind", de: "erinnern"},
-                {en: "refugee", de: "Flüchtling"},
-                {en: "youth", de: "Jugend"},
-                {en: "organization", de: "Organisation"},
-                {en: "run", de: "eine Organisation leiten"},
-                {en: "publish", de: "veröffentlichen"},
-                {en: "friendship", de: "Freundschaft"},
-                {en: "fill in a form", de: "ein Formular ausfüllen"},
-                {en: "distance", de: "Distanz"},
-                {en: "transport", de: "Verkehrsmittel"},
-                {en: "face", de: "vor etwas stehen"},
-                {en: "fit in", de: "sich einfügen"},
-                {en: "act", de: "handeln"},
-                {en: "adapt", de: "anpassen"},
-                {en: "get used to", de: "sich an etwas gewöhnen"},
-                {en: "end up", de: "schließlich etwas tun"},
-                {en: "responsibility", de: "Verantwortung"},
-                {en: "within", de: "innerhalb"},
-                {en: "advisor", de: "Berater"},
-                {en: "carer", de: "Betreuer"},
-                {en: "be dependent on", de: "von jm. abhängig sein"},
-                {en: "get to do", de: "etwas tun können"},
-                {en: "not anywhere", de: "nirgendwo"},
-                {en: "shop window", de: "Schaufenster"},
-                {en: "apron", de: "Schürze"},
-                {en: "be in a hurry", de: "es eilig haben"},
-                {en: "normally", de: "normalerweise"}
+                {en: ["first-person narrative"], de: ["ich-erzählung"], hint: ""},
+                {en: ["request"], de: ["bitte", "wunsch"], hint: "Unfortunately, nobody has reacted to my request for help."},
+                {en: ["informal"], de: ["informell", "umgangssprachlich"], hint: "informal ↔ formal (förmlich)"},
+                {en: ["(to) be attracted to sb."], de: ["sich zu jm. hingezogen fühlen"], hint: "I'm really attracted to boys with blue eyes and a nice smile."},
+                {en: ["(to) be seeing sb."], de: ["mit jm. zusammen sein"], hint: "They've been seeing each other for quite a while now, and next month they're going to get married."},
+                {en: ["(to) fall in love (with sb.)"], de: ["sich (in jn.) verlieben"], hint: ""},
+                {en: ["(to) date sb."], de: ["mit jm. gehen", "mit jm. zusammen sein"], hint: "Dad and mum met for years before they got married."},
+                {en: ["(to) break up (with sb.)"], de: ["schluss machen (mit jm.)", "sich trennen (von jm.)"], hint: "Jonathan's parents have broken up and are getting divorced soon."},
+                {en: ["(to) get to know sb."], de: ["jn. kennenlernen"], hint: "My parents got to know each other in high school."},
+                {en: ["annoyed (with sb. / about sth.)"], de: ["verärgert (über jn./etwas)", "irritiert"], hint: "She was annoyed with him because he was late again."},
+                {en: ["confused"], de: ["verwirrt"], hint: "He looked so confused - he clearly didn't understand you."},
+                {en: ["cross (with sb.)"], de: ["böse", "sauer (auf jn.)"], hint: "Mum was cross with me because I was late."},
+                {en: ["frightened"], de: ["verängstigt"], hint: "Don't be frightened. Thunder sounds scary but it isn't dangerous."},
+                {en: ["hopeful"], de: ["zuversichtlich", "hoffnungsvoll"], hint: "It might stop raining, but I'm not very hopeful."},
+                {en: ["pessimistic"], de: ["pessimistisch"], hint: "optimistic ↔ pessimistic"},
+                {en: ["pleased"], de: ["froh", "erfreut", "zufrieden"], hint: "I'm really pleased with my new mobile. It's much better than my old one."},
+                {en: ["furious (with/at sb.)"], de: ["wütend", "zornig (auf jn.)", "wutentbrannt"], hint: "He was furious when I told him. I've never seen anyone so angry."},
+                {en: ["heartbroken"], de: ["todunglücklich", "untröstlich"], hint: "Sally was heartbroken after her dog died."},
+                {en: ["terrified"], de: ["entsetzt"], hint: "I was terrified when I was offered the leading role in the play."},
+                {en: ["thrilled"], de: ["begeistert"], hint: ""},
+                {en: ["absolutely"], de: ["völlig", "absolut"], hint: "I wasn't just hungry - I was absolutely starving."},
+                {en: ["ex-"], de: ["ex-", "ehemalig"], hint: "my ex-boyfriend/girlfriend; London's ex-mayor"},
+                {en: ["male"], de: ["männlich", "männliche person"], hint: "Most of the workers here are male."},
+                {en: ["female"], de: ["weiblich", "weibliche person"], hint: "Females often earn less money than males."},
+                {en: ["acquaintance"], de: ["bekannte", "bekannter"], hint: "I wouldn't say he's a real friend. He's just an acquaintance."},
+                {en: ["(to) enter sth."], de: ["etwas eingeben", "eintragen"], hint: "Please enter your name on this list."},
+                {en: ["password"], de: ["passwort"], hint: "You shouldn't tell other people your password."},
+                {en: ["(to) update sth."], de: ["etwas aktualisieren", "auf den neuesten stand bringen"], hint: "Philip has just updated his status."},
+                {en: ["status"], de: ["status"], hint: ""},
+                {en: ["account"], de: ["account", "konto"], hint: "You'll need some ID to open a bank account. / How do I change the password of my email account?"},
+                {en: ["murder"], de: ["mord"], hint: ""},
+                {en: ["(to) murder"], de: ["ermorden"], hint: "murder = Mord, murderer = Mörder/in"},
+                {en: ["(to) declare sth."], de: ["etwas erklären", "verkünden"], hint: "He was furious with me and declared that he never wanted to see me again."},
+                {en: ["husband"], de: ["ehemann"], hint: "ihr Mann = her husband (not: her man)"},
+                {en: ["wife", "wives"], de: ["ehefrau"], hint: "seine Frau = his wife (not: his woman)"},
+                {en: ["you ought to stop ..."], de: ["du solltest aufhören"], hint: "Some people say we ought to stop eating meat."},
+                {en: ["diet"], de: ["ernährung", "speiseplan", "diät"], hint: "Fruit and vegetables are important for a healthy diet."},
+                {en: ["protein"], de: ["protein", "eiweiß"], hint: ""},
+                {en: ["healthy"], de: ["gesund"], hint: "healthy ↔ sick, ill"},
+                {en: ["(to) be supposed to do sth."], de: ["etwas tun sollen"], hint: "We're not supposed to use our mobiles at school, but some of us do."},
+                {en: ["pasta"], de: ["nudeln"], hint: "Pasta is my favourite food. / Nudeln sind mein Lieblingsessen."},
+                {en: ["cultural"], de: ["kulturell"], hint: ""},
+                {en: ["communication"], de: ["kommunikation", "verständigung"], hint: ""},
+                {en: ["statistics"], de: ["statistik"], hint: "Statistics show that London's population is continuing to grow."},
+                {en: ["bar chart"], de: ["balkendiagramm"], hint: ""},
+                {en: ["pie chart"], de: ["tortendiagramm"], hint: ""},
+                {en: ["chart"], de: ["tabelle", "schaubild"], hint: ""},
+                {en: ["average"], de: ["durchschnittlich", "durchschnitt"], hint: "The average age of students in our year is 16.5."},
+                {en: ["length"], de: ["länge", "dauer"], hint: "The swimming pool has a length of 25 metres."},
+                {en: ["useful"], de: ["nützlich"], hint: "You'll find this map useful for finding your way around town."},
+                {en: ["percentage"], de: ["prozentsatz", "prozentualer anteil"], hint: "What percentage of your pocket money do you spend on clothes?"},
+                {en: ["chore"], de: ["hausarbeit", "pflicht"], hint: "What chores do you do at home? - I wash the dishes and walk the dog."},
+                {en: ["(to) realize sth."], de: ["etwas erkennen", "sich einer sache bewusst werden"], hint: "When I got home, I realized that I had left my bag on the train."},
+                {en: ["amount (of)"], de: ["betrag", "menge", "höhe"], hint: "£300? I wouldn't pay that amount for a pair of jeans."},
+                {en: ["(to) insist on sth."], de: ["auf etwas bestehen"], hint: "I didn't want to go to the Millers but Mum insisted. Dad always insists on me helping him clean the car."},
+                {en: ["value"], de: ["wert"], hint: "Do young people share older people's values?"},
+                {en: ["tidy"], de: ["ordentlich", "aufgeräumt"], hint: ""},
+                {en: ["cash"], de: ["bargeld", "geld"], hint: "You have to pay in cash in this shop - you can't use a card."},
+                {en: ["simply"], de: ["einfach"], hint: "This is a very simple recipe, so you should be able to follow it. / What are you trying to say? Can you put it more simply, please?"},
+                {en: ["(to) run out of money"], de: ["zu ende gehen", "knapp werden"], hint: "Time is running out. / We're running out of time. / It was so hot that the shops ran out of cold drinks."},
+                {en: ["(to) encourage sb."], de: ["jn. ermutigen", "jn. ermuntern"], hint: "My parents encouraged me to go abroad for a year."},
+                {en: ["perhaps"], de: ["vielleicht"], hint: "= maybe"},
+                {en: ["certain"], de: ["bestimmt", "gewiss"], hint: "something you do regularly: Smoking is a bad habit."},
+                {en: ["habit"], de: ["gewohnheit"], hint: ""},
+                {en: ["agreement"], de: ["einigung", "vereinbarung"], hint: "After a long discussion, we finally reached an agreement."},
+                {en: ["(to) express"], de: ["ausdrücken", "zum ausdruck bringen"], hint: "\"In my opinion\", \"In my view\" and \"I think\" are useful phrases to express your opinion."},
+                {en: ["(to) stress"], de: ["betonen"], hint: "noun: stress - verb: (to) stress"},
+                {en: ["hen"], de: ["huhn", "henne"], hint: ""},
+                {en: ["(to) agree to differ"], de: ["sich darauf einigen dass man verschiedener ansicht ist", "einseh dass man sich nicht einigen kann"], hint: "The argument could have gone on and on, so we agreed to differ."},
+                {en: ["(to) remind sb."], de: ["jn. erinnern"], hint: "Please remind me that it's Grandma's birthday on Friday. I want to call her. / Grandpa always says I remind him of his sister. / remember sth. = sich an etwas erinnern / Do you remember her name? / remind sb. = jn. erinnern / I mustn't forget. Please remind me."},
+                {en: ["refugee"], de: ["flüchtling"], hint: ""},
+                {en: ["youth"], de: ["jugend", "jugend-"], hint: "It's cheaper to stay at a youth hostel than at a hotel."},
+                {en: ["organization"], de: ["organisation"], hint: ""},
+                {en: ["(to) run an organization / a business / a hotel / ...", "ran", "run"], de: ["eine organisation / eine firma / ein hotel leiten", "führen"], hint: "My uncle runs a motel near New Orleans."},
+                {en: ["(to) publish"], de: ["veröffentlichen"], hint: "The first Harry Potter book was published in 1997."},
+                {en: ["friendship"], de: ["freundschaft"], hint: ""},
+                {en: ["(to) fill in a form"], de: ["ein formular ausfüllen"], hint: ""},
+                {en: ["distance"], de: ["distanz", "entfernung"], hint: "(to) travel long distances / weite Strecken fahren/zurücklegen"},
+                {en: ["transport"], de: ["verkehrsmittel", "transport"], hint: "different forms of transport"},
+                {en: ["(to) face sth."], de: ["vor etwas stehen", "mit etwas konfrontiert werden"], hint: "Jamie, face the facts. You'll never be a rock star. As a single parent, you have to face problems other parents don't have to deal with."},
+                {en: ["(to) fit in"], de: ["sich einfügen", "seinen platz finden", "hineinpassen"], hint: "At first, I found it difficult to fit in at my new school. There are some students in my sister's class who just don't fit in."},
+                {en: ["(to) act"], de: ["handeln", "sich verhalten"], hint: "When you get older you're expected to act more responsibly."},
+                {en: ["(to) adapt (to sth.)"], de: ["sich (einer sache) anpassen"], hint: "When they moved to India, it took some time to adapt to the climate."},
+                {en: ["(to) get used to sth."], de: ["sich an etwas gewöhnen"], hint: "When we were in England, it was strange to drive on the left, but we soon got used to it. Did you know that people once used to drive on the left in Sweden? / After a couple of days we got used to driving on the left. / Nicht verwechseln: Did you know that people once used to drive on the left in Sweden? / After a couple of days we got used to driving on the left."},
+                {en: ["(to) end up doing sth."], de: ["schließlich etwas tun"], hint: "My aunt started her career washing the dishes in a hotel. She ended up owning the place."},
+                {en: ["responsibility"], de: ["verantwortung"], hint: "Having children is a big responsibility."},
+                {en: ["within"], de: ["innerhalb (von)"], hint: "Do you think you can finish your project within a week? We respect all cultures within our community."},
+                {en: ["advisor"], de: ["berater", "beraterin"], hint: "1. advice (Rat); 2. advisor, -ser (Berater/in)"},
+                {en: ["carer"], de: ["betreuer", "betreuerin"], hint: "The old man couldn't look after himself any longer and needed a carer."},
+                {en: ["(to) be dependent on sb./sth."], de: ["von jm./etwas abhängig sein", "auf jn./etwas angewiesen sein"], hint: "Children are dependent on their parents until they start to earn money."},
+                {en: ["(to) get to do sth."], de: ["etwas tun können/dürfen", "die möglichkeit haben etwas zu tun"], hint: "I only get to go to the party tonight if I finish all my homework."},
+                {en: ["not ... anywhere"], de: ["nirgendwo", "nirgendwohin"], hint: "Where's my key? I can't see it anywhere. I don't want to go anywhere. I just want to stay at home."},
+                {en: ["shop window"], de: ["schaufenster"], hint: ""},
+                {en: ["apron"], de: ["schürze"], hint: ""},
+                {en: ["(to) be in a hurry"], de: ["in eile sein", "es eilig haben"], hint: "Come for dinner tomorrow. We'll eat around seven. I tried to act calmly, but it was difficult to hide how nervous I was."},
+                {en: ["normally"], de: ["normalerweise", "normal"], hint: "adj: normal - adv: normally"}
             ]
         };
 
@@ -552,6 +556,8 @@
         let incorrectAnswers = 0;
         let currentQuestion = null;
         let hasAnswered = false;
+        let currentAttempt = 1; // Track attempt number (1 or 2)
+        let wrongAnswers = []; // Track wrong answers for spaced repetition
 
         // Elements
         const startScreen = document.getElementById('startScreen');
@@ -604,7 +610,14 @@
             }
 
             const count = parseInt(vocabCountSlider.value);
-            currentQuiz = shuffleArray(selectedUnits).slice(0, Math.min(count, selectedUnits.length));
+            
+            // Include wrong answers with higher frequency (3x more likely)
+            let pool = [...selectedUnits];
+            wrongAnswers.forEach(wrongVocab => {
+                pool.push(wrongVocab, wrongVocab, wrongVocab); // Add 3 times
+            });
+            
+            currentQuiz = shuffleArray(pool).slice(0, Math.min(count, pool.length));
             
             currentIndex = 0;
             score = 0;
@@ -625,6 +638,7 @@
             }
 
             hasAnswered = false;
+            currentAttempt = 1; // Reset to first attempt
             currentQuestion = currentQuiz[currentIndex];
             
             // Random direction
@@ -632,14 +646,20 @@
             
             if (isEnglishToGerman) {
                 direction.textContent = 'Übersetze ins Deutsche';
-                question.textContent = currentQuestion.en;
-                currentQuestion.correctAnswer = currentQuestion.de;
+                // Pick random English variant to display
+                const enVariant = currentQuestion.en[Math.floor(Math.random() * currentQuestion.en.length)];
+                question.textContent = enVariant;
+                currentQuestion.correctAnswers = currentQuestion.de;
                 currentQuestion.direction = 'de';
+                currentQuestion.questionText = enVariant;
             } else {
                 direction.textContent = 'Übersetze ins Englische';
-                question.textContent = currentQuestion.de;
-                currentQuestion.correctAnswer = currentQuestion.en;
+                // Pick random German variant to display
+                const deVariant = currentQuestion.de[Math.floor(Math.random() * currentQuestion.de.length)];
+                question.textContent = deVariant;
+                currentQuestion.correctAnswers = currentQuestion.en;
                 currentQuestion.direction = 'en';
+                currentQuestion.questionText = deVariant;
             }
 
             currentQ.textContent = currentIndex + 1;
@@ -670,31 +690,68 @@
         // Check answer
         function checkAnswer() {
             const userAnswer = answerInput.value.trim().toLowerCase();
-            const correctAnswer = currentQuestion.correctAnswer.toLowerCase();
             
-            // Normalize answers (remove special chars, extra spaces)
-            const normalizeAnswer = (str) => str.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '').replace(/\s+/g, ' ').trim();
+            if (userAnswer === '') {
+                alert('Bitte gib eine Antwort ein!');
+                return;
+            }
+            
+            // Normalize answer (remove special chars, extra spaces)
+            const normalizeAnswer = (str) => str
+                .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '')
+                .replace(/\s+/g, ' ')
+                .trim()
+                .toLowerCase();
             
             const normalizedUser = normalizeAnswer(userAnswer);
-            const normalizedCorrect = normalizeAnswer(correctAnswer);
             
-            const isCorrect = normalizedUser === normalizedCorrect;
+            // Check against all accepted answers
+            const isCorrect = currentQuestion.correctAnswers.some(answer => {
+                const normalizedCorrect = normalizeAnswer(answer);
+                return normalizedUser === normalizedCorrect;
+            });
             
-            hasAnswered = true;
-            answerInput.disabled = true;
-
             if (isCorrect) {
+                // Correct answer
+                hasAnswered = true;
+                answerInput.disabled = true;
                 score++;
                 correctAnswers++;
                 feedback.className = 'feedback correct';
                 feedback.innerHTML = '✓ Richtig!';
+                submitBtn.textContent = 'Weiter';
             } else {
-                incorrectAnswers++;
-                feedback.className = 'feedback incorrect';
-                feedback.innerHTML = `✗ Falsch<div class="correct-answer">Richtige Antwort: ${currentQuestion.correctAnswer}</div>`;
+                // Wrong answer
+                if (currentAttempt === 1) {
+                    // First attempt - show hint if available
+                    currentAttempt = 2;
+                    feedback.className = 'feedback incorrect';
+                    
+                    let feedbackHtml = '✗ Falsch - Versuch es noch einmal!';
+                    if (currentQuestion.hint && currentQuestion.hint.trim() !== '') {
+                        feedbackHtml += `<div class="correct-answer" style="margin-top: 12px;"><strong>Hinweis:</strong> ${currentQuestion.hint}</div>`;
+                    }
+                    
+                    feedback.innerHTML = feedbackHtml;
+                    answerInput.value = '';
+                    answerInput.focus();
+                } else {
+                    // Second attempt - show correct answer
+                    hasAnswered = true;
+                    answerInput.disabled = true;
+                    incorrectAnswers++;
+                    
+                    // Add to wrong answers for spaced repetition
+                    if (!wrongAnswers.some(v => v === currentQuestion)) {
+                        wrongAnswers.push(currentQuestion);
+                    }
+                    
+                    feedback.className = 'feedback incorrect';
+                    const correctAnswersText = currentQuestion.correctAnswers.join(' / ');
+                    feedback.innerHTML = `✗ Leider falsch<div class="correct-answer">Richtige Antwort: ${correctAnswersText}</div>`;
+                    submitBtn.textContent = 'Weiter';
+                }
             }
-
-            submitBtn.textContent = 'Weiter';
         }
 
         // Show results
