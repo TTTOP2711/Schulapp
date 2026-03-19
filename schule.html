@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schule - Stefan's App</title>
+    <style>
+        :root {
+            --primary: #0066FF; --primary-dark: #0052CC; --success: #00C853;
+            --danger: #FF3B30; --warning: #FF9500; --bg: #F8F9FA; --card: #FFFFFF;
+            --text: #1A1A1A; --text-secondary: #6B7280; --border: #E5E7EB;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08); --radius: 16px; --radius-sm: 12px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: var(--bg); color: var(--text); line-height: 1.6;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 24px; }
+        .screen { display: none; animation: fadeIn 0.3s; }
+        .screen.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
+        .header h1 { font-size: 32px; font-weight: 700; }
+        .back-btn {
+            width: 44px; height: 44px; background: var(--card); border: none; border-radius: 12px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 20px; box-shadow: var(--shadow); transition: all 0.2s; text-decoration: none; color: var(--text);
+        }
+        .back-btn:hover { transform: scale(1.05); }
+        
+        .card { background: var(--card); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); margin-bottom: 20px; }
+        .card-title { font-size: 20px; font-weight: 600; margin-bottom: 15px; }
+        
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 24px; }
+        .menu-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: var(--radius); padding: 32px; cursor: pointer; transition: all 0.3s;
+            position: relative; overflow: hidden;
+        }
+        .menu-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.1); opacity: 0; transition: opacity 0.3s;
+        }
+        .menu-card:hover::before { opacity: 1; }
+        .menu-card:active { transform: scale(0.98); }
+        .menu-card.secondary { background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%); }
+        .menu-card.tertiary { background: linear-gradient(135deg, #10B981 0%, #059669 100%); }
+        .menu-card.quaternary { background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); }
+        .menu-card.quinary { background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%); }
+        .menu-icon { font-size: 56px; margin-bottom: 16px; }
+        .menu-title { font-size: 24px; font-weight: 700; color: white; margin-bottom: 8px; }
+        .menu-description { font-size: 15px; color: rgba(255,255,255,0.85); }
+        
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 14px 24px; background: var(--primary); color: white; border: none;
+            border-radius: var(--radius-sm); font-size: 16px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .btn-secondary { background: var(--card); color: var(--text); box-shadow: var(--shadow); }
+        .btn-success { background: var(--success); }
+        .btn-danger { background: var(--danger); }
+        .btn-full { width: 100%; }
+        .btn-small { padding: 8px 16px; font-size: 14px; }
+        
+        .ai-response {
+            background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+            border-radius: var(--radius); padding: 24px; color: white; margin-top: 20px;
+        }
+        .ai-response-title { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
+        .ai-response-content { font-size: 15px; line-height: 1.8; white-space: pre-wrap; }
+        .ai-loading { display: flex; align-items: center; gap: 12px; padding: 20px; background: var(--bg); border-radius: var(--radius-sm); }
+        .ai-loading-spinner {
+            width: 20px; height: 20px; border: 3px solid var(--border);
+            border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .subject-sport { background: #FF9500; } .subject-deutsch { background: #FF3B30; }
+        .subject-mathe { background: #007AFF; } .subject-mathe-spez { background: #0051A8; }
+        .subject-physik { background: #FF2D92; } .subject-geo { background: #333333; color: white; }
+        .subject-ethik { background: #FFD60A; } .subject-soz { background: #8E8E93; }
+        .subject-latein { background: #636366; } .subject-wou { background: #F2F2F7; color: #333; }
+        .subject-englisch { background: #AF52DE; } .subject-info { background: #1C1C1E; color: white; }
+        .subject-geschichte { background: #2C2C2E; color: white; } .subject-bio { background: #34C759; }
+        .subject-musik { background: #FFD60A; } .subject-kunst { background: #FFD60A; }
+        .subject-chemie { background: #FF9500; } .subject-seminar { background: #8E8E93; }
+        
+        .timetable-grid { display: grid; grid-template-columns: 100px repeat(5, 1fr); gap: 8px; margin-bottom: 20px; }
+        .time-cell { padding: 12px 8px; background: var(--bg); border-radius: 8px; font-size: 12px; font-weight: 600; text-align: center; }
+        .day-header { padding: 12px; background: var(--primary); color: white; border-radius: 8px; font-weight: 600; text-align: center; }
+        .lesson-cell {
+            padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 600; text-align: center;
+            cursor: pointer; min-height: 50px; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+        }
+        .lesson-cell:hover { transform: scale(1.05); }
+        .lesson-cell.empty { background: var(--bg); color: var(--text-secondary); }
+        
+        .item-list { display: grid; gap: 12px; }
+        .homework-item, .test-item, .vacation-item {
+            background: var(--card); border-radius: var(--radius-sm); padding: 16px;
+            box-shadow: var(--shadow); display: flex; align-items: center; gap: 12px;
+        }
+        .homework-checkbox { width: 24px; height: 24px; cursor: pointer; accent-color: var(--success); }
+        .homework-content { flex: 1; }
+        .homework-subject {
+            font-weight: 600; margin-bottom: 4px; display: inline-block;
+            padding: 4px 10px; border-radius: 8px; font-size: 13px; color: white;
+        }
+        .homework-desc { font-size: 14px; margin-bottom: 4px; }
+        .homework-due { font-size: 13px; color: var(--text-secondary); }
+        .priority-badge { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .priority-asap { background: #FFEBEE; color: var(--danger); }
+        .priority-long { background: #E3F2FD; color: var(--primary); }
+        
+        .photo-upload-area {
+            border: 2px dashed var(--border); border-radius: var(--radius-sm); padding: 40px;
+            text-align: center; cursor: pointer; transition: all 0.2s;
+        }
+        .photo-upload-area:hover { border-color: var(--primary); background: #F8F9FA; }
+        .photo-preview { max-width: 100%; border-radius: var(--radius-sm); margin-top: 20px; }
+        
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+        input[type="text"], input[type="date"], select, textarea {
+            width: 100%; padding: 12px; font-size: 15px; border: 2px solid var(--border);
+            border-radius: var(--radius-sm); outline: none;
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+        textarea { resize: vertical; min-height: 100px; }
+        
+        .tabs { display: flex; gap: 8px; background: var(--card); padding: 6px; border-radius: var(--radius-sm); box-shadow: var(--shadow); margin-bottom: 24px; }
+        .tab {
+            flex: 1; padding: 12px; background: transparent; border: none; border-radius: 10px;
+            font-size: 15px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 0.2s;
+        }
+        .tab.active { background: var(--primary); color: white; }
+        
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--card); border-radius: var(--radius); max-width: 600px; width: 90%;
+            max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+        }
+        .modal-header {
+            padding: 24px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .modal-title { font-size: 22px; font-weight: 600; }
+        .modal-close { width: 32px; height: 32px; border: none; background: var(--bg); border-radius: 8px; cursor: pointer; font-size: 20px; }
+        .modal-body { padding: 24px; }
+        .modal-footer { padding: 20px 24px; border-top: 1px solid var(--border); display: flex; gap: 12px; justify-content: flex-end; }
+        
+        @media (max-width: 768px) {
+            .container { padding: 16px; }
+            .header h1 { font-size: 24px; }
+            .menu-grid { grid-template-columns: 1fr; }
+            .timetable-grid { grid-template-columns: 80px repeat(5, 1fr); font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Main Menu -->
+        <div id="mainMenuScreen" class="screen active">
+            <div class="header">
+                <a href="index.html" class="back-btn">←</a>
+                <h1>📚 Schule</h1>
+                <div style="width:44px;"></div>
+            </div>
+            <div class="menu-grid">
+                <div class="menu-card" onclick="showScreen('subjectsScreen'); renderSubjects();">
+                    <div class="menu-icon">📖</div>
+                    <div class="menu-title">Fächer</div>
+                    <div class="menu-description">Lerneinheiten verwalten</div>
+                </div>
+                <div class="menu-card secondary" onclick="showScreen('timetableScreen'); renderTimetable();">
+                    <div class="menu-icon">📅</div>
+                    <div class="menu-title">Stundenplan</div>
+                    <div class="menu-description">Woche A/B System</div>
+                </div>
+                <div class="menu-card tertiary" onclick="showScreen('orgaScreen'); renderOrga();">
+                    <div class="menu-icon">📋</div>
+                    <div class="menu-title">Orga</div>
+                    <div class="menu-description">HA, Tests, Vertretung</div>
+                </div>
+                <div class="menu-card quaternary" onclick="showScreen('dailyStuffScreen')">
+                    <div class="menu-icon">📸</div>
+                    <div class="menu-title">Täglicher Stoff</div>
+                    <div class="menu-description">Fotos & KI-Analyse</div>
+                </div>
+                <div class="menu-card quinary" onclick="showScreen('vacationScreen'); renderVacations();">
+                    <div class="menu-icon">🏖️</div>
+                    <div class="menu-title">Ferien & Events</div>
+                    <div class="menu-description">Thüringen Kalender</div>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-top: 32px;">
+                <h2 class="card-title">🤖 KI-Assistent</h2>
+                <div style="display: grid; gap: 12px;">
+                    <button class="btn btn-full" onclick="getMorningPrep()">☀️ Morgen-Vorbereitung</button>
+                    <button class="btn btn-full btn-secondary" onclick="getTestPrep()">📝 Test-Vorbereitung</button>
+                </div>
+                <div id="aiResponseContainer"></div>
+            </div>
+        </div>
+
+        <!-- Subjects Screen -->
+        <div id="subjectsScreen" class="screen">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('mainMenuScreen')">←</button>
+                <h1>Fächer</h1>
+                <div style="width:44px;"></div>
+            </div>
+            <div class="menu-grid" id="subjectsList"></div>
+        </div>
+
+        <!-- Subject Detail -->
+        <div id="subjectDetailScreen" class="screen">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('subjectsScreen')">←</button>
+                <h1 id="subjectDetailTitle">Mathe</h1>
+                <button class="btn btn-secondary" onclick="openModal('addUnitModal')">+ Einheit</button>
+            </div>
+            <div id="unitsList"></div>
+        </div>
+
+        <!-- Timetable -->
+        <div id="timetableScreen" class="screen">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('mainMenuScreen')">←</button>
+                <h1>Stundenplan</h1>
+                <div style="width:44px;"></div>
+            </div>
+            <div class="tabs">
+                <button class="tab active" onclick="switchTimetableView('a')">Woche A</button>
+                <button class="tab" onclick="switchTimetableView('b')">Woche B</button>
+            </div>
+            <div class="card">
+                <div style="font-weight: 600; color: var(--text-secondary);">
+                    Aktuelle Woche: <span id="currentWeekDisplay">A</span>
+                </div>
+            </div>
+            <div id="timetableContent"></div>
+        </div>
+
+        <!-- Orga -->
+        <div id="orgaScreen" class="screen">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('mainMenuScreen')">←</button>
+                <h1>Orga</h1>
+                <div style="width:44px;"></div>
+            </div>
+            <div class="tabs">
+                <button class="tab active" onclick="switchOrgaView('homework')">Hausaufgaben</button>
+                <button class="tab" onclick="switchOrgaView('tests')">Tests</button>
+                <button class="tab" onclick="switchOrgaView('substitutions')">Vertretung</button>
+            </div>
+            <div id="homeworkView">
+                <button class="btn btn-full" onclick="openModal('addHomeworkModal')">+ Hausaufgabe</button>
+                <div class="item-list" id="homeworkList"></div>
+            </div>
+            <div id="testsView" style="display:none;">
+                <button class="btn btn-full" onclick="openModal('addTestModal')">+ Test/LK</button>
+                <div class="item-list" id="testsList"></div>
+            </div>
+            <div id="substitutionsView" style="display:none;">
+                <button class="btn btn-full" onclick="openModal('addSubstitutionModal')">+ Vertretung</button>
+                <div class="item-list" id="substitutionsList"></div>
+            </div>
+        </div>
+
+        <!-- Daily Stuff -->
+        <div id="dailyStuffScreen" class="screen">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('mainMenuScreen')">←</button>
+                <h1>Täglicher Stoff</h1>
+                <div style="width:44px;"></div>
+            </div>
+            <div class="card">
+                <h2 class="card-title">Foto hochladen</h2>
+                <div class="photo-upload-area" onclick="document.getElementById('photoInput').click()">
+                    <div style="font-size: 48px; margin-bottom: 12px;">📸</div>
+                    <div>Klicke hier oder ziehe ein Foto rein</div>
+                </div>
+                <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)">
+                <img id="photoPreview" class="photo-preview" style="display:none;">
+            </div>
+            <div class="card" id="photoAssignCard" style="display:none;">
+                <h2 class="card-title">Fach zuordnen</h2>
+                <select id="photoSubjectSelect"></select>
+                <button class="btn btn-full" onclick="analyzePhotoWithAI()">🤖 KI-Analyse & Speichern</button>
+            </div>
+            <div id="photoAIResponse"></div>
+        </div>
+
+        <!-- Vacation -->
+        <div id="vacationScreen" class="screen">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('mainMenuScreen')">←</button>
+                <h1>🏖️ Ferien & Events</h1>
+                <button class="btn btn-secondary" onclick="openModal('addVacationModal')">+ Event</button>
+            </div>
+            <div class="card">
+                <h2 class="card-title">Thüringer Schulferien 2026</h2>
+                <div id="thuringiaVacationsList"></div>
+            </div>
+            <div class="card">
+                <h2 class="card-title">Meine Events</h2>
+                <div id="customVacationsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="addUnitModal" class="modal-overlay" onclick="if(event.target===this) closeModal('addUnitModal')">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Neue Lerneinheit</div>
+                <button class="modal-close" onclick="closeModal('addUnitModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Titel</label>
+                    <input type="text" id="unitTitle" placeholder="z.B. Vektorrechnung">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Beschreibung</label>
+                    <textarea id="unitDesc" placeholder="Notizen..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('addUnitModal')">Abbrechen</button>
+                <button class="btn" onclick="saveUnit()">Speichern</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="addHomeworkModal" class="modal-overlay" onclick="if(event.target===this) closeModal('addHomeworkModal')">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Neue Hausaufgabe</div>
+                <button class="modal-close" onclick="closeModal('addHomeworkModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Fach</label>
+                    <select id="homeworkSubject"></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Beschreibung</label>
+                    <textarea id="homeworkDesc" placeholder="Was ist zu tun?"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Fälligkeitsdatum</label>
+                    <input type="date" id="homeworkDue">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Priorität</label>
+                    <select id="homeworkPriority">
+                        <option value="asap">ASAP</option>
+                        <option value="long">Lang</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('addHomeworkModal')">Abbrechen</button>
+                <button class="btn" onclick="saveHomework()">Speichern</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="addTestModal" class="modal-overlay" onclick="if(event.target===this) closeModal('addTestModal')">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Neuer Test/LK</div>
+                <button class="modal-close" onclick="closeModal('addTestModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Fach</label>
+                    <select id="testSubject"></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Thema</label>
+                    <input type="text" id="testTopic" placeholder="z.B. Vektorrechnung">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Datum</label>
+                    <input type="date" id="testDate">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('addTestModal')">Abbrechen</button>
+                <button class="btn" onclick="saveTest()">Speichern</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="addSubstitutionModal" class="modal-overlay" onclick="if(event.target===this) closeModal('addSubstitutionModal')">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Neue Vertretung</div>
+                <button class="modal-close" onclick="closeModal('addSubstitutionModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Datum</label>
+                    <input type="date" id="subDate">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Block</label>
+                    <select id="subBlock">
+                        <option value="0">0. Stunde</option>
+                        <option value="1">1. Block</option>
+                        <option value="2">2. Block</option>
+                        <option value="3">3. Block</option>
+                        <option value="4">4. Block</option>
+                        <option value="5">5. Block</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Original-Fach</label>
+                    <select id="subOriginal"></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Vertretungs-Fach</label>
+                    <select id="subReplacement"></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('addSubstitutionModal')">Abbrechen</button>
+                <button class="btn" onclick="saveSubstitution()">Speichern</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editLessonModal" class="modal-overlay" onclick="if(event.target===this) closeModal('editLessonModal')">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Stunde bearbeiten</div>
+                <button class="modal-close" onclick="closeModal('editLessonModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Fach</label>
+                    <select id="lessonSubject"></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" onclick="deleteLesson()">Löschen</button>
+                <button class="btn btn-secondary" onclick="closeModal('editLessonModal')">Abbrechen</button>
+                <button class="btn" onclick="saveLesson()">Speichern</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="addVacationModal" class="modal-overlay" onclick="if(event.target===this) closeModal('addVacationModal')">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Neues Event</div>
+                <button class="modal-close" onclick="closeModal('addVacationModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <input type="text" id="vacationName" placeholder="z.B. Wandertag">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Von</label>
+                    <input type="date" id="vacationStart">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Bis (optional)</label>
+                    <input type="date" id="vacationEnd">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('addVacationModal')">Abbrechen</button>
+                <button class="btn" onclick="saveVacation()">Speichern</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DATA
+        const SUBJECTS = [
+            { id: 'sport', name: 'Sport', color: '#FF9500', class: 'subject-sport' },
+            { id: 'deutsch', name: 'Deutsch', color: '#FF3B30', class: 'subject-deutsch' },
+            { id: 'mathe', name: 'Mathe', color: '#007AFF', class: 'subject-mathe' },
+            { id: 'mathe-spez', name: 'Mathe Spez', color: '#0051A8', class: 'subject-mathe-spez' },
+            { id: 'physik', name: 'Physik', color: '#FF2D92', class: 'subject-physik' },
+            { id: 'geo', name: 'Geo', color: '#333333', class: 'subject-geo' },
+            { id: 'ethik', name: 'Ethik', color: '#FFD60A', class: 'subject-ethik' },
+            { id: 'soz', name: 'Sozialkunde', color: '#8E8E93', class: 'subject-soz' },
+            { id: 'latein', name: 'Latein', color: '#636366', class: 'subject-latein' },
+            { id: 'wou', name: 'woU Info', color: '#F2F2F7', class: 'subject-wou' },
+            { id: 'englisch', name: 'Englisch', color: '#AF52DE', class: 'subject-englisch' },
+            { id: 'info', name: 'Info', color: '#1C1C1E', class: 'subject-info' },
+            { id: 'geschichte', name: 'Geschichte', color: '#2C2C2E', class: 'subject-geschichte' },
+            { id: 'bio', name: 'Bio', color: '#34C759', class: 'subject-bio' },
+            { id: 'musik', name: 'Musik', color: '#FFD60A', class: 'subject-musik' },
+            { id: 'kunst', name: 'Kunst', color: '#FFD60A', class: 'subject-kunst' },
+            { id: 'chemie', name: 'Chemie', color: '#FF9500', class: 'subject-chemie' },
+            { id: 'seminar', name: 'Seminarfach', color: '#8E8E93', class: 'subject-seminar' }
+        ];
+
+        const TIMES = [
+            { id: 0, label: '0. Stunde', time: '07:00 - 07:45' },
+            { id: 1, label: '1. Block', time: '07:50 - 09:20' },
+            { id: 2, label: '2. Block', time: '09:45 - 11:15' },
+            { id: 3, label: '3. Block', time: '11:40 - 13:10' },
+            { id: 4, label: '4. Block', time: '13:30 - 15:00' },
+            { id: 5, label: '5. Block', time: '15:05 - 16:35' }
+        ];
+
+        const THURINGIA_VACATIONS_2026 = [
+            { name: 'Winterferien', start: '2026-02-10', end: '2026-02-15' },
+            { name: 'Osterferien', start: '2026-04-02', end: '2026-04-11' },
+            { name: 'Pfingstferien', start: '2026-05-23', end: '2026-05-23' },
+            { name: 'Sommerferien', start: '2026-07-20', end: '2026-08-30' },
+            { name: 'Herbstferien', start: '2026-10-10', end: '2026-10-24' },
+            { name: 'Weihnachtsferien', start: '2026-12-21', end: '2027-01-02' }
+        ];
+
+        let schoolData = JSON.parse(localStorage.getItem('schoolData') || JSON.stringify({
+            subjects: SUBJECTS.map(s => ({ ...s, units: [] })),
+            timetable: {
+                a: { mo: {}, di: {}, mi: {}, do: {}, fr: {} },
+                b: { mo: {}, di: {}, mi: {}, do: {}, fr: {} }
+            },
+            currentWeek: 'a',
+            weekStartDate: new Date().toISOString().split('T')[0],
+            homework: [],
+            tests: [],
+            substitutions: [],
+            dailyStuff: [],
+            customVacations: []
+        }));
+
+        let currentSubject = null;
+        let currentTimetableWeek = 'a';
+        let currentOrgaView = 'homework';
+        let editingLesson = { week: null, day: null, block: null };
+
+        function saveData() {
+            localStorage.setItem('schoolData', JSON.stringify(schoolData));
+        }
+
+        // NAVIGATION
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // AI FUNCTIONS
+        async function callClaudeAPI(systemPrompt, userPrompt) {
+            try {
+                const response = await fetch("https://api.anthropic.com/v1/messages", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        model: "claude-sonnet-4-20250514",
+                        max_tokens: 1000,
+                        messages: [{ role: "user", content: userPrompt }],
+                        system: systemPrompt
+                    })
+                });
+                const data = await response.json();
+                return data.content.map(item => item.text || "").join("\n");
+            } catch (error) {
+                return "Fehler bei der KI-Anfrage. Bitte versuche es erneut.";
+            }
+        }
+
+        async function getMorningPrep() {
+            const container = document.getElementById('aiResponseContainer');
+            container.innerHTML = '<div class="ai-loading"><div class="ai-loading-spinner"></div><div>KI analysiert deinen Tag...</div></div>';
+
+            const today = new Date();
+            const dayNames = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+            const todayName = dayNames[today.getDay()];
+            const dayKey = ['mo', 'di', 'mi', 'do', 'fr'][today.getDay() - 1];
+            const schedule = dayKey ? schoolData.timetable[schoolData.currentWeek][dayKey] : {};
+            
+            let scheduleText = '';
+            TIMES.forEach(time => {
+                const lessonId = schedule[time.id];
+                if (lessonId) {
+                    const subject = SUBJECTS.find(s => s.id === lessonId);
+                    scheduleText += `${time.label}: ${subject?.name || 'Unbekannt'}\n`;
+                }
+            });
+
+            const systemPrompt = "Du bist ein freundlicher Schul-Assistent. Gib kurze, motivierende Tipps.";
+            const userPrompt = `Heute ist ${todayName}. Hier ist mein Stundenplan:\n${scheduleText || 'Kein Unterricht'}\n\nGib mir eine kurze (3-4 Sätze) Vorbereitung: Was sollte ich mitbringen, worauf achten?`;
+
+            const response = await callClaudeAPI(systemPrompt, userPrompt);
+            container.innerHTML = `<div class="ai-response"><div class="ai-response-title">☀️ Morgen-Vorbereitung</div><div class="ai-response-content">${response}</div></div>`;
+        }
+
+        async function getTestPrep() {
+            const container = document.getElementById('aiResponseContainer');
+            container.innerHTML = '<div class="ai-loading"><div class="ai-loading-spinner"></div><div>KI prüft Tests...</div></div>';
+
+            const today = new Date();
+            const upcoming = schoolData.tests.filter(test => {
+                const testDate = new Date(test.date);
+                const diffDays = Math.floor((testDate - today) / (1000 * 60 * 60 * 24));
+                return diffDays >= 0 && diffDays <= 7;
+            });
+
+            if (upcoming.length === 0) {
+                container.innerHTML = `<div class="ai-response"><div class="ai-response-title">📝 Test-Vorbereitung</div><div class="ai-response-content">Super! Keine Tests in den nächsten 7 Tagen. 😊</div></div>`;
+                return;
+            }
+
+            let testsText = '';
+            upcoming.forEach(test => {
+                const subject = SUBJECTS.find(s => s.id === test.subject);
+                const testDate = new Date(test.date);
+                const diffDays = Math.floor((testDate - today) / (1000 * 60 * 60 * 24));
+                testsText += `- ${subject?.name}: ${test.topic} (in ${diffDays} Tagen)\n`;
+            });
+
+            const systemPrompt = "Du bist ein motivierender Lern-Coach. Gib konkrete, ermutigende Tipps.";
+            const userPrompt = `Ich habe diese Tests:\n${testsText}\n\nGib mir einen kurzen (4-5 Sätze) Lernplan und Motivation!`;
+
+            const response = await callClaudeAPI(systemPrompt, userPrompt);
+            container.innerHTML = `<div class="ai-response"><div class="ai-response-title">📝 Test-Vorbereitung</div><div class="ai-response-content">${response}</div></div>`;
+        }
+
+        async function analyzePhotoWithAI() {
+            const subject = document.getElementById('photoSubjectSelect').value;
+            const subjectName = SUBJECTS.find(s => s.id === subject)?.name;
+            const photoData = document.getElementById('photoPreview').src;
+            
+            const container = document.getElementById('photoAIResponse');
+            container.innerHTML = '<div class="ai-loading"><div class="ai-loading-spinner"></div><div>KI analysiert...</div></div>';
+
+            const systemPrompt = "Du bist ein Lern-Assistent. Analysiere Lernmaterialien.";
+            const userPrompt = `Foto für ${subjectName}. Gib 2-3 Lerntipps.`;
+
+            const response = await callClaudeAPI(systemPrompt, userPrompt);
+
+            schoolData.dailyStuff.push({
+                date: new Date().toISOString(),
+                subject,
+                photo: photoData,
+                aiAnalysis: response
+            });
+            saveData();
+
+            container.innerHTML = `<div class="ai-response"><div class="ai-response-title">🤖 KI-Analyse</div><div class="ai-response-content">${response}</div></div>`;
+            alert('Foto gespeichert! 📸');
+            document.getElementById('photoPreview').style.display = 'none';
+            document.getElementById('photoAssignCard').style.display = 'none';
+            document.getElementById('photoInput').value = '';
+        }
+
+        // SUBJECTS
+        function renderSubjects() {
+            const list = document.getElementById('subjectsList');
+            list.innerHTML = '';
+            schoolData.subjects.forEach(s => {
+                const div = document.createElement('div');
+                div.className = `menu-card ${s.class}`;
+                div.onclick = () => openSubject(s.id);
+                div.innerHTML = `<div class="menu-title">${s.name}</div><div class="menu-description">${s.units.length} Einheiten</div>`;
+                list.appendChild(div);
+            });
+        }
+
+        function openSubject(id) {
+            currentSubject = schoolData.subjects.find(s => s.id === id);
+            document.getElementById('subjectDetailTitle').textContent = currentSubject.name;
+            renderUnits();
+            showScreen('subjectDetailScreen');
+        }
+
+        function renderUnits() {
+            const list = document.getElementById('unitsList');
+            if (currentSubject.units.length === 0) {
+                list.innerHTML = '<div class="card" style="text-align:center; padding:40px;"><p style="color:var(--text-secondary);">Noch keine Lerneinheiten.</p></div>';
+                return;
+            }
+            list.innerHTML = '';
+            currentSubject.units.forEach((u, i) => {
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.innerHTML = `
+                    <div style="display:flex; justify-content:space-between;">
+                        <div><h3>${u.title}</h3>${u.description ? `<p style="color:var(--text-secondary); font-size:14px;">${u.description}</p>` : ''}</div>
+                        <button class="btn-small btn-danger" onclick="deleteUnit(${i})">Löschen</button>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function saveUnit() {
+            const title = document.getElementById('unitTitle').value.trim();
+            if (!title) { alert('Titel eingeben!'); return; }
+            currentSubject.units.push({ title, description: document.getElementById('unitDesc').value.trim() });
+            saveData();
+            renderUnits();
+            closeModal('addUnitModal');
+            document.getElementById('unitTitle').value = '';
+            document.getElementById('unitDesc').value = '';
+        }
+
+        function deleteUnit(i) {
+            if (confirm('Wirklich löschen?')) {
+                currentSubject.units.splice(i, 1);
+                saveData();
+                renderUnits();
+            }
+        }
+
+        // TIMETABLE
+        function renderTimetable() {
+            const start = new Date(schoolData.weekStartDate);
+            const now = new Date();
+            const diffWeeks = Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000));
+            schoolData.currentWeek = diffWeeks % 2 === 0 ? 'a' : 'b';
+            document.getElementById('currentWeekDisplay').textContent = schoolData.currentWeek.toUpperCase();
+            renderTimetableGrid();
+        }
+
+        function switchTimetableView(week) {
+            currentTimetableWeek = week;
+            document.querySelectorAll('#timetableScreen .tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            renderTimetableGrid();
+        }
+
+        function renderTimetableGrid() {
+            const week = schoolData.timetable[currentTimetableWeek];
+            let html = '<div class="timetable-grid"><div class="time-cell"></div>';
+            ['Mo', 'Di', 'Mi', 'Do', 'Fr'].forEach(d => html += `<div class="day-header">${d}</div>`);
+            TIMES.forEach(t => {
+                html += `<div class="time-cell">${t.label}<br><small>${t.time}</small></div>`;
+                ['mo', 'di', 'mi', 'do', 'fr'].forEach(day => {
+                    const lesson = week[day][t.id];
+                    if (lesson) {
+                        const s = SUBJECTS.find(x => x.id === lesson);
+                        html += `<div class="lesson-cell ${s.class}" onclick="editLesson('${currentTimetableWeek}', '${day}', ${t.id})">${s.name}</div>`;
+                    } else {
+                        html += `<div class="lesson-cell empty" onclick="editLesson('${currentTimetableWeek}', '${day}', ${t.id})">+ Fach</div>`;
+                    }
+                });
+            });
+            html += '</div>';
+            document.getElementById('timetableContent').innerHTML = html;
+        }
+
+        function editLesson(week, day, block) {
+            editingLesson = { week, day, block };
+            const select = document.getElementById('lessonSubject');
+            select.innerHTML = '<option value="">Kein Fach</option>';
+            SUBJECTS.forEach(s => select.innerHTML += `<option value="${s.id}">${s.name}</option>`);
+            const current = schoolData.timetable[week][day][block];
+            if (current) select.value = current;
+            openModal('editLessonModal');
+        }
+
+        function saveLesson() {
+            const id = document.getElementById('lessonSubject').value;
+            if (id) schoolData.timetable[editingLesson.week][editingLesson.day][editingLesson.block] = id;
+            else delete schoolData.timetable[editingLesson.week][editingLesson.day][editingLesson.block];
+            saveData();
+            renderTimetableGrid();
+            closeModal('editLessonModal');
+        }
+
+        function deleteLesson() {
+            delete schoolData.timetable[editingLesson.week][editingLesson.day][editingLesson.block];
+            saveData();
+            renderTimetableGrid();
+            closeModal('editLessonModal');
+        }
+
+        // ORGA
+        function renderOrga() {
+            renderHomework();
+            renderTests();
+            renderSubstitutions();
+        }
+
+        function switchOrgaView(view) {
+            currentOrgaView = view;
+            document.querySelectorAll('#orgaScreen .tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('homeworkView').style.display = view === 'homework' ? 'block' : 'none';
+            document.getElementById('testsView').style.display = view === 'tests' ? 'block' : 'none';
+            document.getElementById('substitutionsView').style.display = view === 'substitutions' ? 'block' : 'none';
+        }
+
+        function renderHomework() {
+            const list = document.getElementById('homeworkList');
+            const hw = schoolData.homework.filter(h => !h.done).sort((a, b) => new Date(a.due) - new Date(b.due));
+            if (hw.length === 0) {
+                list.innerHTML = '<div class="card" style="text-align:center; padding:40px;"><p style="color:var(--text-secondary);">Keine offenen Hausaufgaben.</p></div>';
+                return;
+            }
+            list.innerHTML = '';
+            hw.forEach(item => {
+                const s = SUBJECTS.find(x => x.id === item.subject);
+                const div = document.createElement('div');
+                div.className = 'homework-item';
+                div.innerHTML = `
+                    <input type="checkbox" class="homework-checkbox" onchange="toggleHomework(${schoolData.homework.indexOf(item)})">
+                    <div class="homework-content">
+                        <span class="homework-subject ${s.class}">${s.name}</span>
+                        <span class="priority-badge priority-${item.priority}">${item.priority === 'asap' ? 'ASAP' : 'Lang'}</span>
+                        <div class="homework-desc">${item.description}</div>
+                        <div class="homework-due">Fällig: ${new Date(item.due).toLocaleDateString('de-DE')}</div>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function toggleHomework(i) {
+            schoolData.homework[i].done = !schoolData.homework[i].done;
+            saveData();
+            renderHomework();
+        }
+
+        function renderTests() {
+            const list = document.getElementById('testsList');
+            const tests = schoolData.tests.sort((a, b) => new Date(a.date) - new Date(b.date));
+            if (tests.length === 0) {
+                list.innerHTML = '<div class="card" style="text-align:center; padding:40px;"><p style="color:var(--text-secondary);">Keine Tests.</p></div>';
+                return;
+            }
+            list.innerHTML = '';
+            tests.forEach(item => {
+                const s = SUBJECTS.find(x => x.id === item.subject);
+                const div = document.createElement('div');
+                div.className = 'test-item';
+                div.innerHTML = `
+                    <div class="homework-content">
+                        <span class="homework-subject ${s.class}">${s.name}</span>
+                        <div class="homework-desc">${item.topic}</div>
+                        <div class="homework-due">${new Date(item.date).toLocaleDateString('de-DE')}</div>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function renderSubstitutions() {
+            const list = document.getElementById('substitutionsList');
+            if (schoolData.substitutions.length === 0) {
+                list.innerHTML = '<div class="card" style="text-align:center; padding:40px;"><p style="color:var(--text-secondary);">Keine Vertretungen.</p></div>';
+                return;
+            }
+            list.innerHTML = '';
+            schoolData.substitutions.forEach(item => {
+                const orig = SUBJECTS.find(s => s.id === item.original);
+                const repl = SUBJECTS.find(s => s.id === item.replacement);
+                const div = document.createElement('div');
+                div.className = 'test-item';
+                div.innerHTML = `
+                    <div class="homework-content">
+                        <div class="homework-desc">${new Date(item.date).toLocaleDateString('de-DE')} – ${TIMES[item.block].label}</div>
+                        <div style="margin-top:8px;">
+                            <span class="homework-subject ${orig.class}">${orig.name}</span>
+                            <span style="margin:0 8px;">→</span>
+                            <span class="homework-subject ${repl.class}">${repl.name}</span>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function saveHomework() {
+            const subject = document.getElementById('homeworkSubject').value;
+            const description = document.getElementById('homeworkDesc').value.trim();
+            const due = document.getElementById('homeworkDue').value;
+            const priority = document.getElementById('homeworkPriority').value;
+            if (!description || !due) { alert('Alle Felder ausfüllen!'); return; }
+            schoolData.homework.push({ subject, description, due, priority, done: false });
+            saveData();
+            renderHomework();
+            closeModal('addHomeworkModal');
+            document.getElementById('homeworkDesc').value = '';
+            document.getElementById('homeworkDue').value = '';
+        }
+
+        function saveTest() {
+            const subject = document.getElementById('testSubject').value;
+            const topic = document.getElementById('testTopic').value.trim();
+            const date = document.getElementById('testDate').value;
+            if (!topic || !date) { alert('Alle Felder ausfüllen!'); return; }
+            schoolData.tests.push({ subject, topic, date });
+            saveData();
+            renderTests();
+            closeModal('addTestModal');
+            document.getElementById('testTopic').value = '';
+            document.getElementById('testDate').value = '';
+        }
+
+        function saveSubstitution() {
+            const date = document.getElementById('subDate').value;
+            const block = parseInt(document.getElementById('subBlock').value);
+            const original = document.getElementById('subOriginal').value;
+            const replacement = document.getElementById('subReplacement').value;
+            if (!date) { alert('Datum auswählen!'); return; }
+            schoolData.substitutions.push({ date, block, original, replacement });
+            saveData();
+            renderSubstitutions();
+            closeModal('addSubstitutionModal');
+        }
+
+        // DAILY STUFF
+        function handlePhotoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('photoPreview').src = e.target.result;
+                document.getElementById('photoPreview').style.display = 'block';
+                document.getElementById('photoAssignCard').style.display = 'block';
+                const select = document.getElementById('photoSubjectSelect');
+                select.innerHTML = '';
+                SUBJECTS.forEach(s => select.innerHTML += `<option value="${s.id}">${s.name}</option>`);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // VACATIONS
+        function renderVacations() {
+            const thuList = document.getElementById('thuringiaVacationsList');
+            thuList.innerHTML = '';
+            THURINGIA_VACATIONS_2026.forEach(vac => {
+                const div = document.createElement('div');
+                div.className = 'vacation-item';
+                const start = new Date(vac.start).toLocaleDateString('de-DE');
+                const end = new Date(vac.end).toLocaleDateString('de-DE');
+                div.innerHTML = `
+                    <div class="homework-content">
+                        <div style="font-weight: 600; margin-bottom: 4px;">🏖️ ${vac.name}</div>
+                        <div style="color: var(--text-secondary); font-size: 14px;">${start} - ${end}</div>
+                    </div>
+                `;
+                thuList.appendChild(div);
+            });
+
+            const custList = document.getElementById('customVacationsList');
+            if (schoolData.customVacations.length === 0) {
+                custList.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">Keine eigenen Events.</p>';
+                return;
+            }
+            custList.innerHTML = '';
+            schoolData.customVacations.forEach((vac, i) => {
+                const div = document.createElement('div');
+                div.className = 'vacation-item';
+                const start = new Date(vac.start).toLocaleDateString('de-DE');
+                const end = vac.end ? new Date(vac.end).toLocaleDateString('de-DE') : start;
+                div.innerHTML = `
+                    <div class="homework-content">
+                        <div style="font-weight: 600; margin-bottom: 4px;">📅 ${vac.name}</div>
+                        <div style="color: var(--text-secondary); font-size: 14px;">${start}${vac.end ? ' - ' + end : ''}</div>
+                    </div>
+                    <button class="btn-small btn-danger" onclick="deleteVacation(${i})">Löschen</button>
+                `;
+                custList.appendChild(div);
+            });
+        }
+
+        function saveVacation() {
+            const name = document.getElementById('vacationName').value.trim();
+            const start = document.getElementById('vacationStart').value;
+            const end = document.getElementById('vacationEnd').value;
+            if (!name || !start) { alert('Name und Start eingeben!'); return; }
+            schoolData.customVacations.push({ name, start, end: end || null });
+            saveData();
+            renderVacations();
+            closeModal('addVacationModal');
+            document.getElementById('vacationName').value = '';
+            document.getElementById('vacationStart').value = '';
+            document.getElementById('vacationEnd').value = '';
+        }
+
+        function deleteVacation(i) {
+            if (confirm('Wirklich löschen?')) {
+                schoolData.customVacations.splice(i, 1);
+                saveData();
+                renderVacations();
+            }
+        }
+
+        // INIT
+        window.addEventListener('DOMContentLoaded', () => {
+            const hwSelect = document.getElementById('homeworkSubject');
+            const testSelect = document.getElementById('testSubject');
+            ['subOriginal', 'subReplacement'].forEach(id => {
+                const select = document.getElementById(id);
+                if (select) {
+                    select.innerHTML = '';
+                    SUBJECTS.forEach(s => select.innerHTML += `<option value="${s.id}">${s.name}</option>`);
+                }
+            });
+            if (hwSelect) {
+                hwSelect.innerHTML = '';
+                SUBJECTS.forEach(s => hwSelect.innerHTML += `<option value="${s.id}">${s.name}</option>`);
+            }
+            if (testSelect) {
+                testSelect.innerHTML = '';
+                SUBJECTS.forEach(s => testSelect.innerHTML += `<option value="${s.id}">${s.name}</option>`);
+            }
+            console.log('📚 Schul-App geladen mit KI & Ferien!');
+        });
+    </script>
+</body>
+</html>
