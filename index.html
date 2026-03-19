@@ -145,6 +145,10 @@
             background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
         }
         
+        .menu-card.tertiary {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        }
+        
         .menu-icon {
             font-size: 56px;
             margin-bottom: 16px;
@@ -210,6 +214,11 @@
             border-radius: 10px;
         }
         
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        
         /* Modal */
         .modal-overlay {
             position: fixed;
@@ -231,7 +240,7 @@
         .modal {
             background: var(--card);
             border-radius: var(--radius);
-            max-width: 600px;
+            max-width: 700px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
@@ -250,6 +259,10 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            position: sticky;
+            top: 0;
+            background: var(--card);
+            z-index: 10;
         }
         
         .modal-title {
@@ -278,6 +291,9 @@
             display: flex;
             gap: 12px;
             justify-content: flex-end;
+            position: sticky;
+            bottom: 0;
+            background: var(--card);
         }
         
         /* Form Elements */
@@ -293,6 +309,23 @@
             font-weight: 600;
             color: var(--text);
             margin-bottom: 12px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            outline: none;
+        }
+        
+        input:focus, select:focus {
+            border-color: var(--primary);
         }
         
         .checkbox-grid {
@@ -334,6 +367,21 @@
             cursor: pointer;
             font-size: 15px;
             font-weight: 500;
+        }
+        
+        /* Day Section */
+        .day-section {
+            background: var(--bg);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        
+        .day-section-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--primary);
         }
         
         /* Training Plan */
@@ -463,13 +511,13 @@
             font-weight: 500;
         }
         
-        /* PR List */
-        .pr-grid {
+        /* PR & Material Lists */
+        .item-grid {
             display: grid;
             gap: 12px;
         }
         
-        .pr-card {
+        .item-card {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -478,23 +526,23 @@
             border-radius: var(--radius-sm);
         }
         
-        .pr-info {
+        .item-info {
             display: flex;
             align-items: center;
             gap: 12px;
         }
         
-        .pr-icon {
+        .item-icon {
             font-size: 28px;
         }
         
-        .pr-name {
+        .item-name {
             font-size: 16px;
             font-weight: 600;
             color: var(--text);
         }
         
-        .pr-value {
+        .item-value {
             font-size: 24px;
             font-weight: 700;
             color: var(--primary);
@@ -680,6 +728,36 @@
                     <div class="menu-title">Rekorde</div>
                     <div class="menu-description">Deine Bestleistungen</div>
                 </div>
+                
+                <div class="menu-card tertiary" onclick="showScreen('materialsScreen'); renderMaterialsList();">
+                    <div class="menu-icon">🎒</div>
+                    <div class="menu-title">Materialien</div>
+                    <div class="menu-description">Ausrüstung verwalten</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Materials Screen -->
+        <div id="materialsScreen" class="screen">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('sportMenuScreen')">←</button>
+                <h1>Materialien</h1>
+                <div style="width: 44px;"></div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Meine Ausrüstung</h2>
+                </div>
+                <div class="item-grid" id="materialsList"></div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title" style="margin-bottom: 16px;">Neues Material</h2>
+                <div class="form-group">
+                    <input type="text" id="newMaterialName" placeholder="z.B. Yogamatte, Hanteln...">
+                </div>
+                <button class="btn" onclick="addMaterial()">+ Hinzufügen</button>
             </div>
         </div>
 
@@ -693,7 +771,7 @@
             
             <div class="plan-header">
                 <div class="plan-title">4-Tage Calisthenics Split</div>
-                <div class="plan-subtitle">Optimiert für Kraft & Ausdauer</div>
+                <div class="plan-subtitle">Mo · Di · Do · Fr – Optimiert für Kraft & Ausdauer</div>
             </div>
             
             <div id="planContent"></div>
@@ -707,7 +785,7 @@
                 <button class="btn btn-secondary" onclick="openAddPRModal()">+ Neu</button>
             </div>
             
-            <div class="pr-grid" id="prList"></div>
+            <div class="item-grid" id="prList"></div>
         </div>
 
         <!-- Motivation Module -->
@@ -802,6 +880,10 @@
                             <input type="checkbox" id="type_core" checked>
                             <label for="type_core">🎯 Core</label>
                         </div>
+                        <div class="checkbox-card" onclick="toggleCheckbox(this, 'type_nacken')">
+                            <input type="checkbox" id="type_nacken">
+                            <label for="type_nacken">🦒 Nacken</label>
+                        </div>
                         <div class="checkbox-card" onclick="toggleCheckbox(this, 'type_sprint')">
                             <input type="checkbox" id="type_sprint">
                             <label for="type_sprint">⚡ Sprint</label>
@@ -814,20 +896,26 @@
                 </div>
                 
                 <div class="form-section">
-                    <div class="form-label">Verfügbare Materialien</div>
-                    <div class="checkbox-grid">
-                        <div class="checkbox-card" onclick="toggleCheckbox(this, 'mat_klimmzug')">
-                            <input type="checkbox" id="mat_klimmzug" checked>
-                            <label for="mat_klimmzug">Klimmzugstange</label>
-                        </div>
-                        <div class="checkbox-card" onclick="toggleCheckbox(this, 'mat_gewicht20')">
-                            <input type="checkbox" id="mat_gewicht20" checked>
-                            <label for="mat_gewicht20">20kg Gewichte</label>
-                        </div>
-                        <div class="checkbox-card" onclick="toggleCheckbox(this, 'mat_gewichtSmall')">
-                            <input type="checkbox" id="mat_gewichtSmall" checked>
-                            <label for="mat_gewichtSmall">Kleine Gewichte</label>
-                        </div>
+                    <div class="form-label">Materialien pro Tag</div>
+                    
+                    <div class="day-section">
+                        <div class="day-section-header">Montag</div>
+                        <div class="checkbox-grid" id="materials_mo"></div>
+                    </div>
+                    
+                    <div class="day-section">
+                        <div class="day-section-header">Dienstag</div>
+                        <div class="checkbox-grid" id="materials_di"></div>
+                    </div>
+                    
+                    <div class="day-section">
+                        <div class="day-section-header">Donnerstag</div>
+                        <div class="checkbox-grid" id="materials_do"></div>
+                    </div>
+                    
+                    <div class="day-section">
+                        <div class="day-section-header">Freitag</div>
+                        <div class="checkbox-grid" id="materials_fr"></div>
                     </div>
                 </div>
             </div>
@@ -848,7 +936,7 @@
             <div class="modal-body">
                 <div class="form-section">
                     <div class="form-label">Übung</div>
-                    <select id="prExercise" style="width: 100%; padding: 12px; font-size: 15px; border: 2px solid var(--border); border-radius: var(--radius-sm); outline: none;">
+                    <select id="prExercise">
                         <option value="pushups">Push-ups</option>
                         <option value="pullups">Pull-ups</option>
                         <option value="squats">Squats</option>
@@ -859,7 +947,7 @@
                 </div>
                 <div class="form-section">
                     <div class="form-label">Wert</div>
-                    <input type="number" id="prValue" placeholder="z.B. 50" style="width: 100%; padding: 12px; font-size: 15px; border: 2px solid var(--border); border-radius: var(--radius-sm); outline: none;">
+                    <input type="number" id="prValue" placeholder="z.B. 50">
                 </div>
             </div>
             <div class="modal-footer">
@@ -871,7 +959,23 @@
 
     <script>
         // ========== DATA ==========
-        let sportData = JSON.parse(localStorage.getItem('sportData') || '{"prs":{}}');
+        const DEFAULT_MATERIALS = [
+            { id: 'klimmzug', name: 'Klimmzugstange' },
+            { id: 'gewicht20', name: '20kg Gewichte' },
+            { id: 'gewichtSmall', name: 'Kleine Gewichte' }
+        ];
+
+        let sportData = JSON.parse(localStorage.getItem('sportData') || JSON.stringify({
+            materials: DEFAULT_MATERIALS,
+            prs: {},
+            dayMaterials: {
+                mo: ['klimmzug', 'gewicht20', 'gewichtSmall'],
+                di: ['klimmzug', 'gewicht20', 'gewichtSmall'],
+                do: ['klimmzug', 'gewicht20', 'gewichtSmall'],
+                fr: ['klimmzug', 'gewicht20', 'gewichtSmall']
+            }
+        }));
+
         let motivationData = JSON.parse(localStorage.getItem('motivationTracker') || '{}');
         let motivationView = 'week';
         let monthOffset = 0;
@@ -903,13 +1007,106 @@
             document.getElementById(screenId).classList.add('active');
         }
 
+        // ========== MATERIALS ==========
+        function renderMaterialsList() {
+            const list = document.getElementById('materialsList');
+            
+            if (sportData.materials.length === 0) {
+                list.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">Noch keine Materialien hinzugefügt.</p>';
+                return;
+            }
+
+            list.innerHTML = '';
+            sportData.materials.forEach((mat, index) => {
+                const div = document.createElement('div');
+                div.className = 'item-card';
+                div.innerHTML = `
+                    <div class="item-info">
+                        <div class="item-icon">🎒</div>
+                        <div class="item-name">${mat.name}</div>
+                    </div>
+                    <button class="btn-small btn-danger" onclick="deleteMaterial(${index})">Löschen</button>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function addMaterial() {
+            const name = document.getElementById('newMaterialName').value.trim();
+            if (!name) {
+                alert('Bitte gib einen Namen ein!');
+                return;
+            }
+            
+            const id = 'custom_' + Date.now();
+            sportData.materials.push({ id, name });
+            
+            // Add to all days by default
+            ['mo', 'di', 'do', 'fr'].forEach(day => {
+                if (!sportData.dayMaterials[day].includes(id)) {
+                    sportData.dayMaterials[day].push(id);
+                }
+            });
+            
+            saveSportData();
+            document.getElementById('newMaterialName').value = '';
+            renderMaterialsList();
+        }
+
+        function deleteMaterial(index) {
+            if (confirm('Material wirklich löschen?')) {
+                const matId = sportData.materials[index].id;
+                sportData.materials.splice(index, 1);
+                
+                // Remove from day materials
+                ['mo', 'di', 'do', 'fr'].forEach(day => {
+                    sportData.dayMaterials[day] = sportData.dayMaterials[day].filter(id => id !== matId);
+                });
+                
+                saveSportData();
+                renderMaterialsList();
+            }
+        }
+
         // ========== MODALS ==========
         function openPlanSettings() {
+            // Render material checkboxes for each day
+            ['mo', 'di', 'do', 'fr'].forEach(day => {
+                const container = document.getElementById('materials_' + day);
+                container.innerHTML = '';
+                
+                sportData.materials.forEach(mat => {
+                    const isChecked = sportData.dayMaterials[day].includes(mat.id);
+                    const div = document.createElement('div');
+                    div.className = 'checkbox-card' + (isChecked ? ' checked' : '');
+                    div.onclick = () => toggleDayMaterial(day, mat.id, div);
+                    div.innerHTML = `
+                        <input type="checkbox" id="mat_${day}_${mat.id}" ${isChecked ? 'checked' : ''}>
+                        <label for="mat_${day}_${mat.id}">${mat.name}</label>
+                    `;
+                    container.appendChild(div);
+                });
+            });
+            
             document.getElementById('planSettingsModal').classList.add('active');
         }
 
         function closePlanSettings() {
             document.getElementById('planSettingsModal').classList.remove('active');
+        }
+
+        function toggleDayMaterial(day, matId, card) {
+            const checkbox = card.querySelector('input');
+            checkbox.checked = !checkbox.checked;
+            card.classList.toggle('checked', checkbox.checked);
+            
+            if (checkbox.checked) {
+                if (!sportData.dayMaterials[day].includes(matId)) {
+                    sportData.dayMaterials[day].push(matId);
+                }
+            } else {
+                sportData.dayMaterials[day] = sportData.dayMaterials[day].filter(id => id !== matId);
+            }
         }
 
         function openAddPRModal() {
@@ -930,7 +1127,7 @@
         // ========== TRAINING PLAN ==========
         function renderTrainingPlan() {
             const selectedTypes = [];
-            ['brust', 'beine', 'ruecken', 'schultern', 'arme', 'core', 'sprint', 'ausdauer'].forEach(type => {
+            ['brust', 'beine', 'ruecken', 'schultern', 'arme', 'core', 'nacken', 'sprint', 'ausdauer'].forEach(type => {
                 const checkbox = document.getElementById('type_' + type);
                 if (checkbox && checkbox.checked) {
                     selectedTypes.push(type);
@@ -949,13 +1146,13 @@
                     { icon: '🦵', name: 'Jump Squats', sets: 3, reps: '10' }
                 ],
                 ruecken: [
-                    { icon: '🔙', name: 'Pull-ups', sets: 3, reps: '8-10' },
+                    { icon: '🔙', name: 'Pull-ups', sets: 3, reps: '8-10', needsMat: 'klimmzug' },
                     { icon: '🔙', name: 'Australian Pull-ups', sets: 3, reps: '12-15' },
                     { icon: '🔙', name: 'Superman', sets: 3, reps: '15' }
                 ],
                 schultern: [
                     { icon: '💪', name: 'Pike Push-ups', sets: 3, reps: '10-12' },
-                    { icon: '💪', name: 'Lateral Raises', sets: 3, reps: '15' }
+                    { icon: '💪', name: 'Lateral Raises', sets: 3, reps: '15', needsMat: 'gewichtSmall' }
                 ],
                 arme: [
                     { icon: '💪', name: 'Close-Grip Push-ups', sets: 3, reps: '12-15' },
@@ -965,6 +1162,11 @@
                     { icon: '🎯', name: 'Plank', sets: 3, reps: '45-60 Sek.' },
                     { icon: '🎯', name: 'Leg Raises', sets: 3, reps: '12-15' },
                     { icon: '🎯', name: 'Russian Twists', sets: 3, reps: '20' }
+                ],
+                nacken: [
+                    { icon: '🦒', name: 'Neck Curls', sets: 3, reps: '12-15' },
+                    { icon: '🦒', name: 'Neck Extensions', sets: 3, reps: '12-15' },
+                    { icon: '🦒', name: 'Lateral Neck Flexion', sets: 2, reps: '10 pro Seite' }
                 ],
                 sprint: [
                     { icon: '⚡', name: 'Sprint-Technik', sets: 3, reps: '10 Wdh.' },
@@ -977,20 +1179,26 @@
             };
 
             const days = [
-                { name: 'Montag', focus: 'Brust & Core', types: ['brust', 'core'] },
-                { name: 'Dienstag', focus: 'Beine & Sprint', types: ['beine', 'sprint'] },
-                { name: 'Donnerstag', focus: 'Rücken & Arme', types: ['ruecken', 'arme', 'schultern'] },
-                { name: 'Freitag', focus: 'Full Body & Ausdauer', types: ['brust', 'beine', 'core', 'ausdauer'] }
+                { name: 'Montag', day: 'mo', focus: 'Brust & Core', types: ['brust', 'core'] },
+                { name: 'Dienstag', day: 'di', focus: 'Beine & Sprint', types: ['beine', 'sprint'] },
+                { name: 'Donnerstag', day: 'do', focus: 'Rücken & Arme', types: ['ruecken', 'arme', 'schultern', 'nacken'] },
+                { name: 'Freitag', day: 'fr', focus: 'Full Body & Ausdauer', types: ['brust', 'beine', 'core', 'ausdauer'] }
             ];
 
             const container = document.getElementById('planContent');
             container.innerHTML = '';
 
-            days.forEach(day => {
+            days.forEach(dayInfo => {
+                const dayMats = sportData.dayMaterials[dayInfo.day] || [];
                 const dayExercises = [];
-                day.types.forEach(type => {
+                
+                dayInfo.types.forEach(type => {
                     if (selectedTypes.includes(type) && exercises[type]) {
-                        dayExercises.push(...exercises[type]);
+                        exercises[type].forEach(ex => {
+                            if (!ex.needsMat || dayMats.includes(ex.needsMat)) {
+                                dayExercises.push(ex);
+                            }
+                        });
                     }
                 });
 
@@ -1013,8 +1221,8 @@
                     
                     dayDiv.innerHTML = `
                         <div class="day-header">
-                            <div class="day-title">${day.name}</div>
-                            <div class="day-badge">${day.focus}</div>
+                            <div class="day-title">${dayInfo.name}</div>
+                            <div class="day-badge">${dayInfo.focus}</div>
                         </div>
                         <div class="exercise-grid">${exercisesHTML}</div>
                     `;
@@ -1025,6 +1233,7 @@
         }
 
         function updatePlan() {
+            saveSportData();
             renderTrainingPlan();
             closePlanSettings();
         }
@@ -1052,13 +1261,13 @@
                 const ex = exercises[key];
                 if (ex) {
                     const div = document.createElement('div');
-                    div.className = 'pr-card';
+                    div.className = 'item-card';
                     div.innerHTML = `
-                        <div class="pr-info">
-                            <div class="pr-icon">${ex.icon}</div>
-                            <div class="pr-name">${ex.name}</div>
+                        <div class="item-info">
+                            <div class="item-icon">${ex.icon}</div>
+                            <div class="item-name">${ex.name}</div>
                         </div>
-                        <div class="pr-value">${value}${ex.unit || ''}</div>
+                        <div class="item-value">${value}${ex.unit || ''}</div>
                     `;
                     list.appendChild(div);
                 }
@@ -1229,7 +1438,7 @@
             renderMonthView();
         }
 
-        // Initialize checkbox states
+        // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.checkbox-card').forEach(card => {
                 const checkbox = card.querySelector('input[type="checkbox"]');
