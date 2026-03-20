@@ -2,39 +2,97 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Stefan's Lern-App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V10</title>
     <style>
         :root {
-            --primary: #0066FF;
-            --primary-dark: #0052CC;
-            --success: #00C853;
-            --danger: #FF3B30;
-            --warning: #FF9500;
-            --bg: #F8F9FA;
-            --card: #FFFFFF;
-            --text: #1A1A1A;
-            --text-secondary: #6B7280;
-            --border: #E5E7EB;
+            --primary: #0066FF; --primary-dark: #0052CC;
+            --bg: #F8F9FA; --card: #FFFFFF; --text: #1A1A1A;
             --shadow: 0 2px 8px rgba(0,0,0,0.08);
-            --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
             --radius: 16px;
-            --radius-sm: 12px;
         }
-        
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: var(--bg); 
+            color: var(--text); 
+            min-height: 100vh;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
         }
+        .container { max-width: 900px; width: 100%; padding: 24px; }
+        .header {
+            text-align: center; margin-bottom: 48px;
+        }
+        .header h1 { 
+            font-size: 56px; font-weight: 800; margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--primary), #667EEA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header p { color: #6B7280; font-size: 18px; }
         
-        .container {
-            max-width: 900px;
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        .menu-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: var(--radius); padding: 40px; cursor: pointer;
+            transition: all 0.3s; position: relative; overflow: hidden;
+            text-decoration: none; color: white; display: block;
+        }
+        .menu-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.1); opacity: 0; transition: opacity 0.3s;
+        }
+        .menu-card:hover::before { opacity: 1; }
+        .menu-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,102,255,0.3); }
+        .menu-card.secondary { background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%); }
+        .menu-card.tertiary { background: linear-gradient(135deg, #10B981 0%, #059669 100%); }
+        
+        .menu-icon { font-size: 64px; margin-bottom: 20px; }
+        .menu-title { font-size: 28px; font-weight: 700; margin-bottom: 12px; }
+        .menu-description { font-size: 16px; opacity: 0.9; line-height: 1.5; }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 36px; }
+            .menu-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>V10</h1>
+            <p>Deine zentrale App für Schule, Sport & Leben</p>
+        </div>
+        
+        <div class="menu-grid">
+            <a href="schule.html" class="menu-card">
+                <div class="menu-icon">📚</div>
+                <div class="menu-title">Schule</div>
+                <div class="menu-description">Fächer mit Ordnern, Stundenplan, Hausaufgaben, KI & Ferien</div>
+            </a>
+            
+            <a href="sport.html" class="menu-card secondary">
+                <div class="menu-icon">⚽</div>
+                <div class="menu-title">Sport</div>
+                <div class="menu-description">Trainingsplan, Live-Sessions, Statistik & Rekorde</div>
+            </a>
+            
+            <a href="motivation.html" class="menu-card tertiary">
+                <div class="menu-icon">💪</div>
+                <div class="menu-title">Motivation</div>
+                <div class="menu-description">Gewohnheiten tracken & Fortschritt sehen</div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>            max-width: 900px;
             margin: 0 auto;
             padding: 24px;
         }
