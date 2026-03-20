@@ -1,301 +1,48 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Motivation - Stefan's App</title>
-    <style>
-        :root {
-            --primary: #0066FF; --primary-dark: #0052CC; --success: #00C853;
-            --bg: #F8F9FA; --card: #FFFFFF; --text: #1A1A1A; --text-secondary: #6B7280;
-            --border: #E5E7EB; --shadow: 0 2px 8px rgba(0,0,0,0.08); --radius: 16px; --radius-sm: 12px;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-            background: var(--bg); color: var(--text); line-height: 1.6;
-        }
-        .container { max-width: 900px; margin: 0 auto; padding: 24px; }
-        .screen { display: none; animation: fadeIn 0.3s; }
-        .screen.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
-        .header h1 { font-size: 32px; font-weight: 700; }
-        .back-btn {
-            width: 44px; height: 44px; background: var(--card); border: none; border-radius: 12px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 20px; box-shadow: var(--shadow); transition: all 0.2s; text-decoration: none; color: var(--text);
-        }
-        .back-btn:hover { transform: scale(1.05); }
-        
-        .card { background: var(--card); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); margin-bottom: 20px; }
-        .btn {
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-            padding: 14px 24px; background: var(--primary); color: white; border: none;
-            border-radius: var(--radius-sm); font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s;
-        }
-        .btn-secondary { background: var(--card); color: var(--text); box-shadow: var(--shadow); }
-        .btn-small { padding: 8px 16px; font-size: 14px; }
-        
-        .tabs { display: flex; gap: 8px; background: var(--card); padding: 6px; border-radius: var(--radius-sm); box-shadow: var(--shadow); margin-bottom: 24px; }
-        .tab {
-            flex: 1; padding: 12px; background: transparent; border: none; border-radius: 10px;
-            font-size: 15px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 0.2s;
-        }
-        .tab.active { background: var(--primary); color: white; }
-        
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-        .stat-card { background: var(--card); border-radius: var(--radius-sm); padding: 20px; box-shadow: var(--shadow); text-align: center; }
-        .stat-value { font-size: 36px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
-        .stat-label { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
-        
-        .tracker-table-container {
-            background: var(--card); border-radius: var(--radius); padding: 20px;
-            box-shadow: var(--shadow); overflow-x: auto; margin-bottom: 24px;
-        }
-        .tracker-table { width: 100%; border-collapse: collapse; min-width: 700px; }
-        .tracker-table th {
-            padding: 12px 8px; font-size: 13px; font-weight: 600;
-            color: var(--text-secondary); text-align: center; border-bottom: 2px solid var(--border);
-        }
-        .tracker-table th:first-child { text-align: left; padding-left: 16px; }
-        .tracker-table td {
-            padding: 12px 8px; text-align: center; border-bottom: 1px solid var(--bg);
-        }
-        .tracker-table td:first-child { text-align: left; padding-left: 16px; font-weight: 500; }
-        .tracker-checkbox {
-            width: 36px; height: 36px; border: 2px solid var(--border); border-radius: 10px;
-            display: inline-flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.2s; background: white; font-size: 18px;
-        }
-        .tracker-checkbox:hover { border-color: var(--primary); transform: scale(1.1); }
-        .tracker-checkbox.checked { background: var(--success); border-color: var(--success); color: white; }
-        .today-column { background: #EFF6FF; }
-        .weekend-column { background: #FFF7ED; }
-        
-        @media (max-width: 768px) {
-            .container { padding: 16px; }
-            .header h1 { font-size: 24px; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Motivation - V10</title>
+<style>
+:root{--primary:#0066FF;--bg:#F8F9FA;--card:#FFFFFF;--text:#1A1A1A;--text-secondary:#6B7280;--border:#E5E7EB;--shadow:0 2px 8px rgba(0,0,0,0.08);--radius:12px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:900px;margin:0 auto;padding:20px}
+.header{display:flex;align-items:center;gap:16px;margin-bottom:24px;padding:16px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow)}
+.back-btn{width:40px;height:40px;background:var(--bg);border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .2s;text-decoration:none;color:var(--text)}
+.back-btn:hover{background:var(--border)}
+.header h1{font-size:24px;font-weight:700;flex:1}
+.card{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:20px}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.menu-card{background:linear-gradient(135deg,#10B981 0%,#059669 100%);border-radius:var(--radius);padding:32px;cursor:pointer;transition:all .3s;color:white}
+.menu-card:hover{transform:translateY(-4px)}
+.menu-icon{font-size:48px;margin-bottom:16px}
+.menu-title{font-size:22px;font-weight:700;margin-bottom:8px}
+</style>
 </head>
 <body>
-    <div class="container">
-        <!-- Main Screen -->
-        <div id="mainScreen" class="screen active">
-            <div class="header">
-                <a href="index.html" class="back-btn">←</a>
-                <h1>💪 Motivation</h1>
-                <div style="width:44px;"></div>
-            </div>
-            
-            <div class="tabs">
-                <button class="tab active" onclick="switchView('week')">Woche</button>
-                <button class="tab" onclick="switchView('month')">Monat</button>
-            </div>
-            
-            <div id="weekView">
-                <div class="tracker-table-container">
-                    <table class="tracker-table" id="weekTable"></table>
-                </div>
-                <div class="stats-grid">
-                    <div class="stat-card"><div class="stat-value" id="weekTotal">0</div><div class="stat-label">Gesamt</div></div>
-                    <div class="stat-card"><div class="stat-value" id="weekAverage">0</div><div class="stat-label">Ø/Tag</div></div>
-                    <div class="stat-card"><div class="stat-value" id="currentStreak">0</div><div class="stat-label">Serie</div></div>
-                    <div class="stat-card"><div class="stat-value" id="todayProgress">0</div><div class="stat-label">Heute</div></div>
-                </div>
-            </div>
-            
-            <div id="monthView" style="display:none;">
-                <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
-                    <button class="btn-small btn-secondary" onclick="changeMonth(-1)">←</button>
-                    <h2 id="monthTitle" style="margin: 0;">März 2026</h2>
-                    <button class="btn-small btn-secondary" onclick="changeMonth(1)">→</button>
-                </div>
-                <div class="tracker-table-container">
-                    <table class="tracker-table" id="monthTable"></table>
-                </div>
-                <div class="stats-grid">
-                    <div class="stat-card"><div class="stat-value" id="monthTotal">0</div><div class="stat-label">Gesamt</div></div>
-                    <div class="stat-card"><div class="stat-value" id="monthAverage">0</div><div class="stat-label">Ø/Tag</div></div>
-                    <div class="stat-card"><div class="stat-value" id="monthBest">-</div><div class="stat-label">Bester Tag</div></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // DATA
-        const ACTIVITIES = [
-            { id: 'schule1', label: 'Schule 1', icon: '📖' },
-            { id: 'schule2', label: 'Schule 2', icon: '✏️' },
-            { id: 'sport', label: 'Sport', icon: '🏃' },
-            { id: 'essen', label: 'Gesund essen', icon: '🥗' },
-            { id: 'soziales', label: 'Soziales', icon: '👥' },
-            { id: 'lesen', label: 'Lesen', icon: '📚' },
-            { id: 'handy', label: 'Wenig Handy', icon: '📱' },
-            { id: 'luft', label: 'Frische Luft', icon: '🌳' },
-            { id: 'vidvid', label: 'VidVid', icon: '🎬' },
-            { id: 'dehnen', label: 'Dehnen', icon: '🧘' }
-        ];
-
-        let motivationData = JSON.parse(localStorage.getItem('motivationTracker') || '{}');
-        let currentView = 'week';
-        let monthOffset = 0;
-
-        function saveData() {
-            localStorage.setItem('motivationTracker', JSON.stringify(motivationData));
-        }
-
-        function getDateKey(date) {
-            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-        }
-
-        function toggleActivity(dateKey, activityId) {
-            if (!motivationData[dateKey]) motivationData[dateKey] = {};
-            motivationData[dateKey][activityId] = !motivationData[dateKey][activityId];
-            saveData();
-            if (currentView === 'week') renderWeek();
-            else renderMonth();
-        }
-
-        function switchView(view) {
-            currentView = view;
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById('weekView').style.display = view === 'week' ? 'block' : 'none';
-            document.getElementById('monthView').style.display = view === 'month' ? 'block' : 'none';
-            if (view === 'week') renderWeek();
-            else { monthOffset = 0; renderMonth(); }
-        }
-
-        function renderWeek() {
-            const table = document.getElementById('weekTable');
-            const today = new Date();
-            const days = [];
-            for (let i = 6; i >= 0; i--) {
-                const date = new Date(today);
-                date.setDate(date.getDate() - i);
-                days.push(date);
-            }
-            
-            let html = '<thead><tr><th>Aktivität</th>';
-            const dayNames = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
-            days.forEach(date => {
-                const isToday = getDateKey(date) === getDateKey(today);
-                const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-                const className = isToday ? 'today-column' : (isWeekend ? 'weekend-column' : '');
-                html += `<th class="${className}">${dayNames[date.getDay()]}<br><strong>${date.getDate()}.${date.getMonth() + 1}.</strong></th>`;
-            });
-            html += '</tr></thead><tbody>';
-            
-            ACTIVITIES.forEach(activity => {
-                html += `<tr><td><div style="display:flex; align-items:center; gap:10px;"><span style="font-size:20px;">${activity.icon}</span><span>${activity.label}</span></div></td>`;
-                days.forEach(date => {
-                    const dateKey = getDateKey(date);
-                    const isChecked = motivationData[dateKey] && motivationData[dateKey][activity.id];
-                    const isToday = dateKey === getDateKey(today);
-                    const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-                    const className = isToday ? 'today-column' : (isWeekend ? 'weekend-column' : '');
-                    html += `<td class="${className}"><div class="tracker-checkbox ${isChecked ? 'checked' : ''}" onclick="toggleActivity('${dateKey}', '${activity.id}')">${isChecked ? '✓' : ''}</div></td>`;
-                });
-                html += '</tr>';
-            });
-            html += '</tbody>';
-            table.innerHTML = html;
-            
-            // Stats
-            let total = 0, todayCount = 0;
-            days.forEach(date => {
-                const dateKey = getDateKey(date);
-                const dayData = motivationData[dateKey] || {};
-                const count = Object.values(dayData).filter(v => v).length;
-                total += count;
-                if (dateKey === getDateKey(today)) todayCount = count;
-            });
-            document.getElementById('weekTotal').textContent = total;
-            document.getElementById('weekAverage').textContent = (total / 7).toFixed(1);
-            document.getElementById('todayProgress').textContent = todayCount;
-            
-            // Streak
-            let streak = 0;
-            for (let i = 0; i < 365; i++) {
-                const date = new Date(today);
-                date.setDate(date.getDate() - i);
-                const dayData = motivationData[getDateKey(date)] || {};
-                if (Object.values(dayData).filter(v => v).length > 0) {
-                    if (i === 0 || streak > 0) streak++;
-                } else {
-                    if (i === 0) streak = 0;
-                    break;
-                }
-            }
-            document.getElementById('currentStreak').textContent = streak;
-        }
-
-        function renderMonth() {
-            const today = new Date();
-            const targetDate = new Date(today.getFullYear(), today.getMonth() + monthOffset, 1);
-            const year = targetDate.getFullYear();
-            const month = targetDate.getMonth();
-            const lastDay = new Date(year, month + 1, 0).getDate();
-            const monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
-            document.getElementById('monthTitle').textContent = `${monthNames[month]} ${year}`;
-            
-            const table = document.getElementById('monthTable');
-            let html = '<thead><tr><th>Aktivität</th>';
-            for (let day = 1; day <= lastDay; day++) {
-                const date = new Date(year, month, day);
-                const isToday = getDateKey(date) === getDateKey(today);
-                const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-                const className = isToday ? 'today-column' : (isWeekend ? 'weekend-column' : '');
-                html += `<th class="${className}">${day}</th>`;
-            }
-            html += '</tr></thead><tbody>';
-            
-            ACTIVITIES.forEach(activity => {
-                html += `<tr><td><div style="display:flex; align-items:center; gap:10px;"><span style="font-size:20px;">${activity.icon}</span><span>${activity.label}</span></div></td>`;
-                for (let day = 1; day <= lastDay; day++) {
-                    const date = new Date(year, month, day);
-                    const dateKey = getDateKey(date);
-                    const isChecked = motivationData[dateKey] && motivationData[dateKey][activity.id];
-                    const isToday = dateKey === getDateKey(today);
-                    const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-                    const className = isToday ? 'today-column' : (isWeekend ? 'weekend-column' : '');
-                    html += `<td class="${className}"><div class="tracker-checkbox ${isChecked ? 'checked' : ''}" onclick="toggleActivity('${dateKey}', '${activity.id}')">${isChecked ? '✓' : ''}</div></td>`;
-                }
-                html += '</tr>';
-            });
-            html += '</tbody>';
-            table.innerHTML = html;
-            
-            // Stats
-            let total = 0, bestCount = 0, bestDate = '-';
-            for (let day = 1; day <= lastDay; day++) {
-                const date = new Date(year, month, day);
-                const dayData = motivationData[getDateKey(date)] || {};
-                const count = Object.values(dayData).filter(v => v).length;
-                total += count;
-                if (count > bestCount) {
-                    bestCount = count;
-                    bestDate = `${day}.${month + 1}.`;
-                }
-            }
-            document.getElementById('monthTotal').textContent = total;
-            document.getElementById('monthAverage').textContent = (total / lastDay).toFixed(1);
-            document.getElementById('monthBest').textContent = bestDate;
-        }
-
-        function changeMonth(offset) {
-            monthOffset += offset;
-            renderMonth();
-        }
-
-        // INIT
-        renderWeek();
-        console.log('💪 Motivation-App geladen!');
-    </script>
+<div class="container">
+<div class="header">
+<a href="index.html" class="back-btn">←</a>
+<h1>💪 Motivation</h1>
+</div>
+<div class="card">
+<h2 style="margin-bottom:16px">Motivation-Modul</h2>
+<p style="color:var(--text-secondary)">Gewohnheiten-Tracker kommt bald!</p>
+</div>
+<div class="menu-grid">
+<div class="menu-card">
+<div class="menu-icon">📊</div>
+<div class="menu-title">Woche</div>
+<div>In Entwicklung...</div>
+</div>
+<div class="menu-card">
+<div class="menu-icon">📅</div>
+<div class="menu-title">Monat</div>
+<div>In Entwicklung...</div>
+</div>
+</div>
+</div>
 </body>
 </html>
